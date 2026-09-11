@@ -5,8 +5,9 @@ import Mock from "@/components/mockups/Mock";
 import { AgentAvatar } from "@/components/mockups/ui";
 import { BTN_PRIMARY, BTN_SECONDARY, BTN_OUTLINE, CenterHead, CONTAINER, FeatureItem, HEAD_GRID, LeftHead, LG, MediaFill, SM, Section, VideoBox, imgStyle, logoWhite } from "./ui";
 import { ArrowUp, Chevron, Icon } from "./Icons";
+import { BASE } from "@/lib/base";
 
-const L = (lang: string, path: string) => (/^(https?:|mailto:|tel:|#)/.test(path) ? path : lang === "en" ? path : `/${lang}${path === "/" ? "" : path}`);
+const L = (lang: string, path: string) => (/^(https?:|mailto:|tel:|#)/.test(path) ? path : BASE + (lang === "en" ? path : `/${lang}${path === "/" ? "" : path}`));
 
 /* ---------- Hero with big media (product / specialty pages) ---------- */
 function HeroBubbles({ bubbles }: { bubbles: Bubble[] }) {

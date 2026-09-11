@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { CAL_LINKS } from "@/content/shared";
+import { BASE } from "@/lib/base";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global { interface Window { Cal?: any } }
@@ -42,7 +43,8 @@ export default function CalBooking({ lang }: { lang: string }) {
       const a = (e.target as HTMLElement | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
       if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const u = new URL(a.href, location.href);
-      if (u.origin !== location.origin || !/^\/(nl\/|de\/)?demo\/?$/.test(u.pathname)) return;
+      const p = BASE && u.pathname.startsWith(BASE) ? u.pathname.slice(BASE.length) : u.pathname;
+      if (u.origin !== location.origin || !/^\/(nl\/|de\/)?demo\/?$/.test(p)) return;
       e.preventDefault();
       window.Cal("modal", { calLink: link, config: { layout: "month_view" } });
     };

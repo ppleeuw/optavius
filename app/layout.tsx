@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { BASE, SITE_URL } from "@/lib/base";
 import "./styles/fonts.css";
 import "./styles/site.css";
 import "./styles/extra.css";
 import "./styles/mockups.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.optavius.com"),
+  metadataBase: new URL(SITE_URL),
   title: "AI voice agents for eye care | Optavius",
   description: "AI voice agents for eye-care providers that answer questions, schedule appointments and handle routine requests, 24/7.",
-  icons: { icon: [{ url: "/favicon.ico", sizes: "32x32" }, { url: "/icon.svg", type: "image/svg+xml" }], apple: "/apple-icon.png" },
+  icons: { icon: [{ url: `${BASE}/favicon.ico`, sizes: "32x32" }, { url: `${BASE}/icon.svg`, type: "image/svg+xml" }], apple: `${BASE}/apple-icon.png` },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

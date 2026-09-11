@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LOCALES, splitPath, type Lang } from "@/lib/i18n";
 import { getSite } from "@/lib/content";
+import { BASE as BASE_PATH, SITE_URL } from "@/lib/base";
 import { AboutPage, AgentsPage, ArticlePage, ARTICLES, AskPage, CareersPage, ConsolePage, CustomersPage, DemoPage, HomePage, IntegrationsPage, PricingRoute, PrivacyPage, ProductPage, ResourcesPage, SpecialtiesIndex, SpecialtyPage, StoryPage, TermsPage } from "@/components/site/Pages";
 
 type Params = { slug?: string[] };
-type Search = { kind?: string };
 
 const STATIC = ["", "product", "product/console", "product/ask-optavius", "product/agents", "product/integrations", "pricing", "specialties", "customers", "about", "resources", "careers", "demo", "privacy", "terms"];
 
@@ -48,16 +48,16 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   else if (seg[0] === "customers") m = site.customers.stories.find((p) => p.slug === seg[1])?.meta || m;
   else if (seg[0] === "resources") { const a = (ARTICLES[lang] || ARTICLES.en).find((x) => x.slug === seg[1]); if (a) m = { title: a.title + site.meta.titleSuffix, description: a.description }; }
   const languages: Record<string, string> = {};
-  for (const l of LOCALES) languages[l] = l === "en" ? path || "/" : `/${l}${path === "/" ? "" : path}`;
+  for (const l of LOCALES) languages[l] = `${SITE_URL}${l === "en" ? path || "/" : `/${l}${path === "/" ? "" : path}`}`;
   const locale = lang === "nl" ? "nl_NL" : lang === "de" ? "de_DE" : "en_US";
   return {
-    title: m.title, description: m.description, alternates: { languages }, icons: { icon: [{ url: "/favicon.ico", sizes: "32x32" }, { url: "/icon.svg", type: "image/svg+xml" }], apple: "/apple-icon.png" },
-    openGraph: { title: m.title, description: m.description, siteName: "Optavius", locale, type: "website", images: [{ url: `/og/${lang}.png`, width: 1200, height: 630, alt: "Optavius" }] },
-    twitter: { card: "summary_large_image", title: m.title, description: m.description, images: [`/og/${lang}.png`] },
+    title: m.title, description: m.description, alternates: { languages }, icons: { icon: [{ url: `${BASE_PATH}/favicon.ico`, sizes: "32x32" }, { url: `${BASE_PATH}/icon.svg`, type: "image/svg+xml" }], apple: `${BASE_PATH}/apple-icon.png` },
+    openGraph: { title: m.title, description: m.description, siteName: "Optavius", locale, type: "website", images: [{ url: `${SITE_URL}/og/${lang}.png`, width: 1200, height: 630, alt: "Optavius" }] },
+    twitter: { card: "summary_large_image", title: m.title, description: m.description, images: [`${SITE_URL}/og/${lang}.png`] },
   };
 }
 
-const BASE = "https://www.optavius.com";
+const BASE = SITE_URL;
 /** Structured data: the organisation on every page, the FAQ on pricing, the service on product pages. */
 function jsonLd(path: string, lang: string, site: ReturnType<typeof getSite>) {
   const org = { "@type": "Organization", "@id": `${BASE}/#org`, name: "Optavius", url: BASE, logo: `${BASE}/og/${lang}.png`, contactPoint: [{ "@type": "ContactPoint", telephone: "+1-937-729-2674", contactType: "sales", areaServed: "US", availableLanguage: ["en"] }, { "@type": "ContactPoint", telephone: "+31-97-006-532689", contactType: "sales", areaServed: "NL", availableLanguage: ["nl", "en"] }], sameAs: ["https://www.linkedin.com/company/optavius"] };
@@ -67,9 +67,8 @@ function jsonLd(path: string, lang: string, site: ReturnType<typeof getSite>) {
   return JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
 }
 
-export default async function Page({ params, searchParams }: { params: Promise<Params>; searchParams: Promise<Search> }) {
+export default async function Page({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
-  const sp = await searchParams;
   const { lang, path, site } = resolve(slug);
   const ctx = { site, lang: lang as Lang, path };
   const seg = path.split("/").filter(Boolean);
@@ -90,7 +89,7 @@ export default async function Page({ params, searchParams }: { params: Promise<P
     case "/specialties": return <SpecialtiesIndex {...ctx} />;
     case "/customers": return <CustomersPage {...ctx} />;
     case "/about": return <AboutPage {...ctx} />;
-    case "/resources": return <ResourcesPage {...ctx} filter={sp?.kind || "all"} />;
+    case "/resources": return <ResourcesPage {...ctx} />;
     case "/careers": return <CareersPage {...ctx} />;
     case "/demo": return <DemoPage {...ctx} />;
     case "/privacy": return <PrivacyPage {...ctx} />;

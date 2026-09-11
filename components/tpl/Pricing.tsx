@@ -2,8 +2,9 @@ import type { Site } from "@/content/types";
 import { BTN_OUTLINE, BTN_PRIMARY, CenterHead, Section } from "./ui";
 import { Chevron, Icon } from "./Icons";
 import Calculator from "./Calculator";
+import { BASE } from "@/lib/base";
 
-const L = (lang: string, path: string) => (/^(https?:|mailto:|tel:|#)/.test(path) ? path : lang === "en" ? path : `/${lang}${path}`);
+const L = (lang: string, path: string) => (/^(https?:|mailto:|tel:|#)/.test(path) ? path : BASE + (lang === "en" ? path : `/${lang}${path}`));
 
 export default function PricingPage({ p, lang }: { p: Site["pricing"]; lang: string }) {
   return (

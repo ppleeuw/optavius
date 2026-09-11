@@ -38,3 +38,14 @@ npm run build && npm start      # http://localhost:3000
 
 `tooling/` contains the scripts used to generate media (`gen-optavius.js`, fal.ai), screenshot pages (`opshots.js`) and sweep
 every page for errors, broken images and stray brand names (`opsweep.js`).
+
+## Deployment
+
+The site is exported as static HTML and published with GitHub Actions to GitHub Pages
+(`.github/workflows/pages.yml`). Every push to `main` redeploys https://ppleeuw.github.io/optavius/.
+
+- `NEXT_PUBLIC_BASE_PATH` is the folder the site lives under (`/optavius` on GitHub Pages, empty on a custom domain).
+- `NEXT_PUBLIC_SITE_URL` is the public origin used for the sitemap, social images and structured data.
+
+When www.optavius.com points at GitHub Pages, set a custom domain in the repository's Pages settings and
+change both variables in the workflow to `""` and `https://www.optavius.com`.

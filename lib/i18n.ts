@@ -1,3 +1,5 @@
+import { BASE } from "./base";
+
 export const LOCALES = ["en", "nl", "de"] as const;
 export type Lang = (typeof LOCALES)[number];
 export const DEFAULT_LANG: Lang = "en";
@@ -13,7 +15,7 @@ export function isLang(x: string | undefined): x is Lang {
 export function href(lang: Lang, path: string): string {
   if (/^(https?:|mailto:|tel:|#)/.test(path)) return path;
   const p = path === "/" ? "" : path;
-  return lang === DEFAULT_LANG ? p || "/" : `/${lang}${p}`;
+  return BASE + (lang === DEFAULT_LANG ? p || "/" : `/${lang}${p}`);
 }
 /** Split a URL path into language and language-less path. */
 export function splitPath(segments: string[]): { lang: Lang; path: string } {

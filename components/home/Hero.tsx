@@ -2,6 +2,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import type { Bubble, Site, VideoQuote } from "@/content/types";
 import { AgentAvatar } from "../mockups/ui";
+import { BASE } from "@/lib/base";
 
 const GLASS = "rounded-[22px] p-4 border-glass-2xl bg-glass mask-t-from-50% mask-t-to-90% mask-size-[auto_200%] transition-[opacity,mask-position] duration-500 w-[75vw] max-w-[334px]";
 const BUBBLE_TIMES = [500, 2200, 3900, 5600, 7300];
@@ -32,7 +33,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   const [shown, setShown] = useState(0);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const slides = h.slides;
-  const L = (p: string) => (/^(https?:|mailto:|tel:|#)/.test(p) ? p : lang === "en" ? p : `/${lang}${p}`);
+  const L = (p: string) => (/^(https?:|mailto:|tel:|#)/.test(p) ? p : BASE + (lang === "en" ? p : `/${lang}${p}`));
 
   useEffect(() => {
     const v = videoRefs.current[active];
@@ -50,7 +51,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
           <h1 className="mb-4 text-headline-xl whitespace-pre-wrap text-white md:mb-6">{h.title}</h1>
           <p className="mb-6 max-w-[46ch] text-body-md text-white/90 md:mb-8 md:text-body-lg">{h.subtitle}</p>
           <div className="flex flex-wrap items-center gap-3">
-            <a className={BTN + "bg-surface-primary-500 text-white hover:bg-surface-primary-300 active:bg-green-350 h-10 gap-1 px-4 text-label-md md:h-14 md:gap-2 md:px-8 md:text-body-sm flex-row-reverse"} href={h.primary.href}>{h.primary.label}</a>
+            <a className={BTN + "bg-surface-primary-500 text-white hover:bg-surface-primary-300 active:bg-green-350 h-10 gap-1 px-4 text-label-md md:h-14 md:gap-2 md:px-8 md:text-body-sm flex-row-reverse"} href={L(h.primary.href)}>{h.primary.label}</a>
             <a className={BTN + "bg-surface-tertiary-100 text-primary hover:bg-surface-tertiary-50 hover:text-brand-primary h-10 gap-1 px-4 text-label-md md:h-14 md:gap-2 md:px-8 md:text-body-sm flex-row-reverse"} href={L(h.secondary.href)}>{tel && h.secondary.href.startsWith("tel:") ? <span className="flex flex-col items-start leading-tight"><span>{h.secondary.label}</span><span className="text-label-sm font-normal opacity-80">{tel}</span></span> : h.secondary.label}</a>
           </div>
           <p className="mt-3 text-label-sm text-white/70">{h.note}</p>

@@ -1,10 +1,11 @@
 "use client";
+import { BASE } from "@/lib/base";
 import { useEffect, useRef, useState } from "react";
 import type { DemoSection } from "@/content/types";
 import { AgentAvatar } from "@/components/mockups/ui";
 import { BTN, BTN_PRIMARY, CONTAINER, SECTION, SM } from "./ui";
 
-const SRC = (lang: string) => `/optavius/demo-call-${lang}.mp3`;
+const SRC = (lang: string) => `${BASE}/optavius/demo-call-${lang}.mp3`;
 
 /**
  * "Hear Optavius take a real call": audio sample with a live waveform and a transcript that follows the call.

@@ -9,6 +9,7 @@ import CustomerStories from "@/components/CustomerStories";
 import Mock from "@/components/mockups/Mock";
 import DemoPlayer from "@/components/tpl/DemoPlayer";
 import DemoBooking from "@/components/tpl/DemoBooking";
+import ResourcesList from "@/components/site/ResourcesList";
 import PricingPage from "@/components/tpl/Pricing";
 import { LegalPage, Markdown, P } from "@/components/tpl/Prose";
 import { FeaturedStories, StoryCards, StoryHero } from "@/components/tpl/Stories";
@@ -311,44 +312,17 @@ export function AboutPage({ site, lang, path }: Ctx) {
 }
 
 /* ---------- Resources ---------- */
-export function ResourcesPage({ site, lang, path, filter = "all" }: Ctx & { filter?: string }) {
+export function ResourcesPage({ site, lang, path }: Ctx) {
   const r = site.resources;
-  const list = (ARTICLES[lang] || ARTICLES.en).filter((a) => filter === "all" || a.kind === filter);
   const cover = (a: Article, i: number) => ["bg-green-800", "bg-blue-700", "bg-purple-500", "bg-green-500"][(a.title.length + i) % 4];
+  const items = (ARTICLES[lang] || ARTICLES.en).map((a, i) => ({ slug: a.slug, kind: a.kind, kindLabel: a.kindLabel, title: a.title, description: a.description, readTime: a.readTime, href: lhref(lang, "/resources/" + a.slug), cover: cover(a, i) }));
   return (
     <Shell site={site} lang={lang} path={path}>
       <section className="relative py-section-padding" style={{ zIndex: 2 }}>
         <div className={CONTAINER}><h1 className="max-w-prose text-headline-lg text-black">{r.title}</h1></div>
       </section>
       <Section className="flex flex-col gap-10 pt-10" z={1}>
-        <nav aria-label="Secondary navigation" className="relative">
-          <div className="relative flex w-full items-center overflow-hidden rounded-full bg-surface-tertiary-100 p-1 shadow-xs xl:p-2">
-            <ul className="flex w-full items-center gap-1 overflow-x-auto no-scrollbar">
-              {r.filters.map((f) => (
-                <li key={f.key} className="flex shrink-0 list-none items-center">
-                  <a aria-current={f.key === filter ? "page" : undefined} className="h-10 gap-1 px-4 text-label-md group relative flex cursor-pointer items-center justify-center rounded-2xl focus-outline outline-4 outline-offset-4 outline-transparent transition-[background-color] hover:bg-gray-100" href={lhref(lang, f.key === "all" ? "/resources" : "/resources?kind=" + f.key)}>
-                    <span className={"relative z-20 text-label-md text-nowrap transition-colors " + (f.key === filter ? "text-brand-primary" : "text-secondary group-hover:text-primary")}>{f.label}</span>
-                    {f.key === filter && <div className="absolute top-0 right-0 z-10 h-full w-full rounded-full bg-surface-ghost-100" aria-hidden="true" />}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
-        <div className="grid grid-cols-12 gap-grid-gutter gap-y-10">
-          {list.map((a, i) => (
-            <a key={a.slug} className="group col-span-12 flex flex-col gap-4 focus-outline md:col-span-6 xl:col-span-4" href={lhref(lang, "/resources/" + a.slug)}>
-              <figure className={"relative flex aspect-[4/3] items-end overflow-hidden rounded-2xl p-6 text-white " + cover(a, i)}>
-                <span className="absolute top-5 left-5 rounded-full bg-white/15 px-3 py-1 text-label-sm ring-1 ring-white/25">{a.kindLabel}</span>
-                <span className="text-headline-sm text-balance">{a.title}</span>
-              </figure>
-              <div className="flex flex-col gap-2">
-                <p className="text-body-sm text-secondary line-clamp-2">{a.description}</p>
-                <p className="text-label-sm text-secondary">{a.readTime} {r.readTime}</p>
-              </div>
-            </a>
-          ))}
-        </div>
+        <ResourcesList filters={r.filters} items={items} readTime={r.readTime} />
       </Section>
       <CTABlock c={r.cta} lang={lang} />
     </Shell>

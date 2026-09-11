@@ -3,9 +3,11 @@ import { LOCALES } from "@/lib/i18n";
 import { getSite } from "@/lib/content";
 import { ARTICLES } from "@/components/site/Pages";
 
-export const BASE = "https://www.optavius.com";
+import { SITE_URL } from "@/lib/base";
+export const BASE = SITE_URL;
 const STATIC = ["", "product", "product/console", "product/ask-optavius", "product/agents", "product/integrations", "pricing", "specialties", "customers", "about", "resources", "careers", "demo", "privacy", "terms"];
 
+export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   const out: MetadataRoute.Sitemap = [];
   const now = new Date();

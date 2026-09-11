@@ -1,3 +1,4 @@
+import { asset } from "@/lib/base";
 import type { CSSProperties, ReactNode } from "react";
 import type { Media } from "@/content/types";
 import Mock from "@/components/mockups/Mock";
@@ -116,6 +117,6 @@ export function FeatureItem({ icon, title, text }: { icon?: string; title: strin
 }
 
 /** Logos shown on dark photos: most invert to white, the North Texas mark has its own white file. */
-export const logoWhite = (src: string) => (src.includes("logo-ntx") ? { src: "/optavius/logo-ntx-white.png", cls: "" } : { src, cls: "brightness-0 invert" });
+export const logoWhite = (src: string) => (src.includes("logo-ntx") ? { src: asset("/optavius/logo-ntx-white.png"), cls: "" } : { src, cls: "brightness-0 invert" });
 
 export const imgStyle: CSSProperties = { position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent" };
