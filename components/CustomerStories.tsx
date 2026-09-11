@@ -68,7 +68,7 @@ export default function CustomerStories({ items }: { items: { name: string; titl
     const s = STORIES[i % N];
     const d = i - pos;
     const near = Math.abs(d) <= 2 || Math.abs(d - N * COPIES) <= 2 || Math.abs(d + N * COPIES) <= 2;
-    const offset = d < 0 ? -d * shift : d > 0 ? -(d - 1) * shift : 0;
+    const offset = 0; // symmetric scaling keeps an equal gap on both sides of the active card
     const isActive = d === 0;
     slides.push(
       <div key={i} aria-label={`${(i % N) + 1} of ${N}`} aria-roledescription="slide" className="relative min-w-0 flex-[0_0_var(--fv-slide-basis)] px-[calc(var(--fv-slide-gap)/2)] select-none" role="group" {...(near ? {} : { inert: true })}>
