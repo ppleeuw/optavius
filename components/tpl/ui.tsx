@@ -1,4 +1,5 @@
 import { asset } from "@/lib/base";
+import { telDisplay } from "@/content/shared";
 import type { CSSProperties, ReactNode } from "react";
 import type { Media } from "@/content/types";
 import Mock from "@/components/mockups/Mock";
@@ -114,6 +115,12 @@ export function FeatureItem({ icon, title, text }: { icon?: string; title: strin
       <p className="pr-4 text-body-sm whitespace-pre-line text-secondary md:pr-0">{text}</p>
     </li>
   );
+}
+
+/** Button label for the demo line: the label with the phone number in smaller type underneath. */
+export function CallLabel({ label, href }: { label: string; href: string }) {
+  const n = telDisplay(href);
+  return n ? <span className="flex flex-col items-start leading-tight"><span>{label}</span><span className="text-label-sm font-normal opacity-80">{n}</span></span> : <>{label}</>;
 }
 
 /** Logos shown on dark photos: most invert to white, the North Texas mark has its own white file. */

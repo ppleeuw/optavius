@@ -45,8 +45,8 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   }, [active, slides.length]);
 
   return (
-    <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[700px]">
-      <div className="mt-30 h-[calc(100%-(var(--spacing)*30))] xl:mt-60 xl:h-[calc(100%-(var(--spacing)*60))]">
+    <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[820px]">
+      <div className="mt-30 h-[calc(100%-(var(--spacing)*30))] xl:mt-44 xl:h-[calc(100%-(var(--spacing)*44))]">
         <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10 h-full">
           <h1 className="mb-4 text-headline-xl whitespace-pre-wrap text-white md:mb-6">{h.title}</h1>
           <p className="mb-6 max-w-[46ch] text-body-md text-white/90 md:mb-8 md:text-body-lg">{h.subtitle}</p>
@@ -56,7 +56,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
           </div>
           <p className="mt-3 text-label-sm text-white/70">{h.note}</p>
           {quote && (
-            <figure className="mt-6 hidden max-w-[44ch] items-start gap-3 border-l-2 border-white/40 pl-4 md:flex [@media(max-height:760px)]:md:hidden">
+            <figure className="mt-6 hidden max-w-[44ch] items-start gap-3 border-l-2 border-white/40 pl-4 md:flex [@media(max-height:820px)]:md:hidden">
               <div className="flex flex-col gap-1">
                 <blockquote className="text-body-sm text-white/90">“{quote.quote}”</blockquote>
                 <figcaption className="text-label-sm text-white/70">{quote.name}, {quote.role}</figcaption>

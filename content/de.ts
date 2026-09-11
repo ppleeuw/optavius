@@ -730,9 +730,6 @@ const de: Site = {
     roles: {
       title: "Offene Stellen", lede: "Wir suchen Menschen, die etwas bauen wollen, auf das sich Praxen jeden Tag verlassen.",
       groups: [
-        { name: "Engineering", roles: [
-          { title: "Senior AI Engineer, Voice", location: "Amsterdam · Remote", href: "mailto:" + EMAIL + "?subject=Senior%20AI%20engineer" },
-        ] },
         { name: "Vertrieb", roles: [
           { title: "Founding Account Executive, USA", location: "Houston, TX", href: "mailto:" + EMAIL + "?subject=Account%20executive" },
           { title: "Customer Success, Facharztpraxen", location: "Amsterdam", href: "mailto:" + EMAIL + "?subject=Customer%20success" },

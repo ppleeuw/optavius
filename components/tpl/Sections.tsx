@@ -3,7 +3,7 @@ import type { Bubble, CardsSection, CTASection, FeatureSplit, HeroSection, LogoS
 import Carousel from "@/components/Carousel";
 import Mock from "@/components/mockups/Mock";
 import { AgentAvatar } from "@/components/mockups/ui";
-import { BTN_PRIMARY, BTN_SECONDARY, BTN_OUTLINE, CenterHead, CONTAINER, FeatureItem, HEAD_GRID, LeftHead, LG, MediaFill, SM, Section, VideoBox, imgStyle, logoWhite } from "./ui";
+import { BTN_PRIMARY, BTN_SECONDARY, BTN_OUTLINE, CenterHead, CONTAINER, FeatureItem, HEAD_GRID, LeftHead, LG, MediaFill, SM, Section, VideoBox, imgStyle, logoWhite, CallLabel } from "./ui";
 import { ArrowUp, Chevron, Icon } from "./Icons";
 import { BASE } from "@/lib/base";
 
@@ -216,7 +216,7 @@ export function CTABlock({ c, lang }: { c: CTASection; lang: string }) {
         <p className="mx-auto w-full max-w-prose text-center text-body-sm text-balance whitespace-pre-wrap text-secondary xl:max-w-[560px]">{c.text}</p>
         <div className="flex flex-wrap justify-center gap-2">
           <a className={BTN_PRIMARY + LG} href={L(lang, c.primary.href)}>{c.primary.label}</a>
-          {c.secondary && <a className={BTN_OUTLINE + LG} href={L(lang, c.secondary.href)}>{c.secondary.label}</a>}
+          {c.secondary && <a className={BTN_OUTLINE + LG} href={L(lang, c.secondary.href)}><CallLabel label={c.secondary.label} href={c.secondary.href} /></a>}
         </div>
         {c.note && <p className="text-center text-label-sm text-secondary">{c.note}</p>}
       </div>

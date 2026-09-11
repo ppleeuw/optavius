@@ -3,7 +3,7 @@ import { BASE } from "@/lib/base";
 import { useEffect, useRef, useState } from "react";
 import type { DemoSection } from "@/content/types";
 import { AgentAvatar } from "@/components/mockups/ui";
-import { BTN, BTN_PRIMARY, CONTAINER, SECTION, SM } from "./ui";
+import { BTN, BTN_PRIMARY, CONTAINER, SECTION, SM, CallLabel } from "./ui";
 
 const SRC = (lang: string) => `${BASE}/optavius/demo-call-${lang}.mp3`;
 
@@ -92,7 +92,7 @@ export default function DemoPlayer({ d, lang }: { d: DemoSection; lang: string }
                 {playing ? d.stop : d.play}
                 <span className="font-mono text-label-sm text-white/70">{d.duration}</span>
               </button>
-              <a className={BTN_PRIMARY + SM} href={call.href}>{call.label}</a>
+              <a className={BTN_PRIMARY + SM + " h-auto! py-2"} href={call.href}><CallLabel label={call.label} href={call.href} /></a>
             </div>
             <p className="text-label-sm text-white/70">{d.note}</p>
             <audio ref={audio} src={SRC(lang)} preload="metadata" />

@@ -767,9 +767,6 @@ const en: Site = {
     roles: {
       title: "Open roles", lede: "We're looking for people who want to build something practices rely on every day.",
       groups: [
-        { name: "Engineering", roles: [
-          { title: "Senior AI engineer, voice", location: "Amsterdam · Remote", href: "mailto:" + EMAIL + "?subject=Senior%20AI%20engineer" },
-        ] },
         { name: "Go to market", roles: [
           { title: "Founding account executive, US", location: "Houston, TX", href: "mailto:" + EMAIL + "?subject=Account%20executive" },
           { title: "Customer success, specialty care", location: "Amsterdam", href: "mailto:" + EMAIL + "?subject=Customer%20success" },

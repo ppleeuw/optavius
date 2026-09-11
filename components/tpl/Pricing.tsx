@@ -1,5 +1,5 @@
 import type { Site } from "@/content/types";
-import { BTN_OUTLINE, BTN_PRIMARY, CenterHead, Section } from "./ui";
+import { BTN_OUTLINE, BTN_PRIMARY, CallLabel, CenterHead, Section } from "./ui";
 import { Chevron, Icon } from "./Icons";
 import Calculator from "./Calculator";
 import { BASE } from "@/lib/base";
@@ -69,7 +69,7 @@ export default function PricingPage({ p, lang }: { p: Site["pricing"]; lang: str
           <p className="mx-auto w-full max-w-prose text-center text-body-sm text-balance whitespace-pre-wrap text-secondary xl:max-w-[560px]">{p.cta.text}</p>
           <div className="flex flex-wrap justify-center gap-2">
             <a className={BTN_PRIMARY + "h-14 gap-2 px-8 text-body-sm flex-row-reverse"} href={L(lang, p.cta.primary.href)}>{p.cta.primary.label}</a>
-            {p.cta.secondary && <a className={BTN_OUTLINE + "h-14 gap-2 px-8 text-body-sm flex-row-reverse"} href={p.cta.secondary.href}>{p.cta.secondary.label}</a>}
+            {p.cta.secondary && <a className={BTN_OUTLINE + "h-14 gap-2 px-8 text-body-sm flex-row-reverse"} href={p.cta.secondary.href}><CallLabel label={p.cta.secondary.label} href={p.cta.secondary.href} /></a>}
           </div>
           {p.cta.note && <p className="text-center text-label-sm text-secondary">{p.cta.note}</p>}
         </div>

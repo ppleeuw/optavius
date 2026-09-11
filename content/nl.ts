@@ -732,9 +732,6 @@ const nl: Site = {
     roles: {
       title: "Vacatures", lede: "We zoeken mensen die iets willen bouwen waar praktijken elke dag op vertrouwen.",
       groups: [
-        { name: "Engineering", roles: [
-          { title: "Senior AI engineer, voice", location: "Amsterdam · Remote", href: "mailto:" + EMAIL + "?subject=Senior%20AI%20engineer" },
-        ] },
         { name: "Commercieel", roles: [
           { title: "Founding account executive, VS", location: "Houston, TX", href: "mailto:" + EMAIL + "?subject=Account%20executive" },
           { title: "Customer success, specialistische zorg", location: "Amsterdam", href: "mailto:" + EMAIL + "?subject=Customer%20success" },

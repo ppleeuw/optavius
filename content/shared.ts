@@ -5,6 +5,8 @@ export const TEL_EN_DISPLAY = "+1 937 729 2674";
 export const TEL_NL = "tel:+3197006532689";
 export const TEL_NL_DISPLAY = "+31 970 065 32689";
 export const TEL = TEL_EN;
+/** Display form of a demo-line tel: link, for buttons that show the number. */
+export const telDisplay = (href: string) => (href === TEL_NL ? TEL_NL_DISPLAY : href === TEL_EN ? TEL_EN_DISPLAY : href.startsWith("tel:") ? href.slice(4) : "");
 export const TEL_DISPLAY = TEL_EN_DISPLAY;
 export const EMAIL = "yves@optavius.com";
 export const CALENDLY = "https://calendly.com/yves-right2seenow/new-meeting";
