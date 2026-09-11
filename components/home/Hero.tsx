@@ -56,7 +56,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
           </div>
           <p className="mt-3 text-label-sm text-white/70">{h.note}</p>
           {quote && (
-            <figure className="mt-6 hidden max-w-[44ch] items-start gap-3 border-l-2 border-white/40 pl-4 md:flex [@media(max-height:820px)]:md:hidden">
+            <figure className="mt-6 hidden max-w-[44ch] items-start gap-3 border-l-2 border-white/40 pl-4 md:flex">
               <div className="flex flex-col gap-1">
                 <blockquote className="text-body-sm text-white/90">“{quote.quote}”</blockquote>
                 <figcaption className="text-label-sm text-white/70">{quote.name}, {quote.role}</figcaption>
