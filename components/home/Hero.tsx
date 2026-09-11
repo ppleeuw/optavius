@@ -9,10 +9,11 @@ const BUBBLE_TIMES = [500, 2200, 3900, 5600, 7300];
 const SLIDE_MS = 9800;
 const BTN = "inline-flex cursor-pointer items-center justify-between rounded-full outline-hidden disabled:cursor-not-allowed motion-safe:transition-[background-color,color,border-radius] focus-button ";
 
-function BubbleView({ b, rank }: { b: Bubble; rank: number }) {
-  const state = rank <= 1 ? "mask-position-[center_100%] opacity-100" : rank === 2 ? "mask-position-[center_top] opacity-50" : "mask-position-[center_top] opacity-0";
+function BubbleView({ b, rank, open }: { b: Bubble; rank: number; open: boolean }) {
+  const state = rank <= 1 ? "mask-position-[center_100%] opacity-100" : rank === 2 ? "mask-position-[center_top] opacity-60" : "mask-position-[center_top] opacity-25";
   return (
-    <div className={"place-self-" + b.side + " hero-bubble-in"} style={{ height: "auto" }}>
+    <div className={"grid place-self-" + b.side} style={{ gridTemplateRows: open ? "1fr" : "0fr", transition: "grid-template-rows 1.1s cubic-bezier(.2,.8,.2,1)" }}>
+    <div className={"min-h-0 " + (open ? "hero-bubble-in" : "opacity-0")} style={{ overflow: "hidden" }}>
       <div className={GLASS + " flex flex-col gap-2 " + state}>
         <div className="flex items-center gap-2 text-label-md text-white/80">
           {b.kind === "agent" ? (
@@ -25,6 +26,7 @@ function BubbleView({ b, rank }: { b: Bubble; rank: number }) {
         <div className="typography-body-product text-white">{b.text}</div>
       </div>
     </div>
+    </div>
   );
 }
 
@@ -32,14 +34,22 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   const [active, setActive] = useState(0);
   const [shown, setShown] = useState(0);
   const [narrow, setNarrow] = useState(false);
+  const [bubbleH, setBubbleH] = useState(300);
+  const noteRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    const measure = () => { const n = noteRef.current; const hd = n?.closest("header"); if (!n || !hd) return; setBubbleH(Math.max(180, Math.round(hd.getBoundingClientRect().bottom - n.getBoundingClientRect().bottom - 6))); };
+    measure(); window.addEventListener("resize", measure); return () => window.removeEventListener("resize", measure);
+  }, []);
   useEffect(() => { const mq = window.matchMedia("(max-width: 767px)"); const upd = () => setNarrow(mq.matches); upd(); mq.addEventListener("change", upd); return () => mq.removeEventListener("change", upd); }, []);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const loaded = useRef<Set<number>>(new Set([0]));
   const slides = h.slides;
   const L = (p: string) => (/^(https?:|mailto:|tel:|#)/.test(p) ? p : BASE + (lang === "en" ? p : `/${lang}${p}`));
 
   useEffect(() => {
+    loaded.current.add(active); loaded.current.add((active + 1) % slides.length);
     const v = videoRefs.current[active];
-    if (v) { try { v.currentTime = 0; const p = v.play(); if (p) p.catch(() => {}); } catch {} }
+    if (v) { try { if (v.readyState === 0) v.load(); v.currentTime = 0; const p = v.play(); if (p) p.catch(() => {}); } catch {} }
     setShown(0);
     const timers = BUBBLE_TIMES.map((t, i) => setTimeout(() => setShown(i + 1), t));
     const next = setTimeout(() => setActive((a) => (a + 1) % slides.length), SLIDE_MS);
@@ -56,7 +66,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
             <a className={BTN + "bg-surface-primary-500 text-white hover:bg-surface-primary-300 active:bg-green-350 h-10 gap-1 px-4 text-label-md md:h-14 md:gap-2 md:px-8 md:text-body-sm flex-row-reverse"} href={L(h.primary.href)}>{h.primary.label}</a>
             <a className={BTN + "bg-surface-tertiary-100 text-primary hover:bg-surface-tertiary-50 hover:text-brand-primary h-10 gap-1 px-4 text-label-md md:h-14 md:gap-2 md:px-8 md:text-body-sm flex-row-reverse"} href={L(h.secondary.href)}>{tel && h.secondary.href.startsWith("tel:") ? <span className="flex flex-col items-start leading-tight"><span>{h.secondary.label}</span><span className="text-label-sm font-normal opacity-80">{tel}</span></span> : h.secondary.label}</a>
           </div>
-          <p className="mt-3 text-label-sm text-white/70">{h.note}</p>
+          <p ref={noteRef} className="mt-3 text-label-sm text-white/70">{h.note}</p>
           {quote && (
             <figure className="mt-6 hidden max-w-[44ch] items-start gap-3 border-l-2 border-white/40 pl-4 md:flex">
               <div className="flex flex-col gap-1">
@@ -71,9 +81,9 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
             <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10">
               {active === i && (
                 <div className="absolute bottom-0 left-0 w-full min-[600px]:right-0 min-[600px]:bottom-0 min-[600px]:left-auto min-[600px]:w-auto">
-                  <div className="flex h-[34svh] w-full flex-col justify-end gap-2 overflow-hidden p-4 [mask-image:linear-gradient(to_bottom,transparent_0%,black_38%)] md:gap-3 min-[600px]:w-[454px] md:h-[386px] xl:pb-8">
-                    {s.bubbles.slice(0, shown).map((b, j) => (
-                      <BubbleView key={j} b={b} rank={shown - 1 - j} />
+                  <div className="flex w-full flex-col justify-end gap-2 overflow-hidden p-4 [mask-image:linear-gradient(to_bottom,transparent_0%,black_32%)] md:gap-3 min-[600px]:w-[454px] md:h-[386px] xl:pb-8" style={narrow ? { height: bubbleH } : undefined}>
+                    {s.bubbles.map((b, j) => (
+                      <BubbleView key={j} b={b} rank={shown - 1 - j} open={j < shown} />
                     ))}
                   </div>
                 </div>
@@ -89,7 +99,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 poster={s.poster}
                 autoPlay={i === active}
                 preload={i === active ? "auto" : "none"}
-                src={i === active || i === (active + 1) % slides.length ? (narrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001" : undefined}
+                src={i === active || i === (active + 1) % slides.length || loaded.current.has(i) ? (narrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001" : undefined}
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-black/10" />
             </div>
