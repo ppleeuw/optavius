@@ -7,6 +7,8 @@ import { BASE } from "@/lib/base";
 const GLASS = "rounded-[22px] p-4 border-glass-2xl bg-glass mask-t-from-50% mask-t-to-90% mask-size-[auto_200%] transition-[opacity,mask-position] duration-500 w-[75vw] max-w-[334px]";
 const BUBBLE_TIMES = [500, 2200, 3900, 5600, 7300];
 const SLIDE_MS = 9800;
+/* desktop only: zoom a clip from its left edge so the face clears the headline */
+const ZOOM: Record<string, string> = { hero1: " md:origin-left md:scale-[1.08]", hero2: " md:origin-left md:scale-[1.2]" };
 const BTN = "inline-flex cursor-pointer items-center justify-between rounded-full outline-hidden disabled:cursor-not-allowed motion-safe:transition-[background-color,color,border-radius] focus-button ";
 
 function BubbleView({ b, rank, open }: { b: Bubble; rank: number; open: boolean }) {
@@ -93,7 +95,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
               <div className="absolute inset-0 -z-10 bg-green-800" />
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
-                className="block h-full w-full pointer-events-none absolute object-cover object-[75%_center] md:object-center"
+                className={"block h-full w-full pointer-events-none absolute object-cover object-[75%_center] md:object-center" + (ZOOM[(s.video.match(/hero[0-9]/) || [""])[0]] || "")}
                 muted
                 playsInline
                 poster={s.poster}

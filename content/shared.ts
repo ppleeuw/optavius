@@ -30,9 +30,9 @@ export const VIDEOS = {
   evening: { video: `${G}/hero-evening-video.mp4`, poster: `${G}/hero-evening.webp` },
   shop: { video: `${G}/hero-shop-video.mp4`, poster: `${G}/hero-shop.webp` },
   /* the original fold videos (eye-care versions of the reference hero) */
-  fold1: { video: asset("/media/a137b179d3b526ee8affb8f4930568ab199f2fb8.mp4"), poster: "" },
-  fold2: { video: asset("/media/d7497a6df01e59704d8112a576e2590bfdbe8bab.mp4"), poster: "" },
-  fold3: { video: asset("/media/2280befd2e1aad30dca6ffcec7f92046404a6093.mp4"), poster: "" },
+  fold1: { video: asset("/media/hero1.mp4"), poster: "" },
+  fold2: { video: asset("/media/hero2.mp4"), poster: "" },
+  fold3: { video: asset("/media/hero3.mp4"), poster: "" },
   insights: { video: asset("/media/wistia/ob2qtlyzx3.mp4"), poster: asset("/media/wistia/ob2qtlyzx3.jpg") },
   context: { video: asset("/media/wistia/qnnxqeyk4f.mp4"), poster: asset("/media/wistia/qnnxqeyk4f.jpg") },
   product: { video: `${G}/product-frontdesk-video.mp4`, poster: `${G}/product-frontdesk.webp` },
