@@ -60,7 +60,7 @@ export default function Nav({ variant = "default", site, lang, path }: { variant
     return () => { document.documentElement.style.overflow = ""; };
   }, [mobileOpen]);
 
-  const transparent = variant === "transparent" && atTop && !hovered && !mobileOpen;
+  const transparent = variant === "transparent" && (atTop || hidden) && !hovered && !mobileOpen;
   let bgClass = "pointer-events-auto ease-in-out motion-safe:[transition:translate_0.3s] md:motion-safe:[transition:translate_0.3s,background-color_0.5s] theme-tech:bg-black theme-product:bg-gray-100 theme-platform:bg-gray-200 ";
   if (variant === "transparent") {
     bgClass += transparent ? "theme-tech bg-transparent! " : atTop && hovered && !mobileOpen ? "theme-base " : "bg-white ";

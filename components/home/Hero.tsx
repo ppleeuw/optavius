@@ -44,11 +44,11 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
     const timers = BUBBLE_TIMES.map((t, i) => setTimeout(() => setShown(i + 1), t));
     const next = setTimeout(() => setActive((a) => (a + 1) % slides.length), SLIDE_MS);
     return () => { timers.forEach(clearTimeout); clearTimeout(next); };
-  }, [active, slides.length]);
+  }, [active, slides.length, narrow]);
 
   return (
     <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[820px]">
-      <div className="mt-30 h-[calc(100%-(var(--spacing)*30))] xl:mt-56 xl:h-[calc(100%-(var(--spacing)*56))]">
+      <div className="mt-20 h-[calc(100%-(var(--spacing)*20))] md:mt-30 md:h-[calc(100%-(var(--spacing)*30))] xl:mt-56 xl:h-[calc(100%-(var(--spacing)*56))]">
         <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10 h-full">
           <h1 className="mb-4 text-headline-xl whitespace-pre-wrap text-white md:mb-6">{h.title}</h1>
           <p className="mb-6 max-w-[46ch] text-body-md text-white/90 md:mb-8 md:text-body-lg">{h.subtitle}</p>
@@ -71,7 +71,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
             <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10">
               {active === i && (
                 <div className="absolute bottom-0 left-0 w-full min-[600px]:right-0 min-[600px]:bottom-0 min-[600px]:left-auto min-[600px]:w-auto">
-                  <div className="flex w-full flex-col justify-end gap-2 overflow-y-clip p-4 md:gap-3 min-[600px]:w-[454px] md:h-[386px] xl:pb-8">
+                  <div className="flex h-[34svh] w-full flex-col justify-end gap-2 overflow-hidden p-4 [mask-image:linear-gradient(to_bottom,transparent_0%,black_38%)] md:gap-3 min-[600px]:w-[454px] md:h-[386px] xl:pb-8">
                     {s.bubbles.slice(0, shown).map((b, j) => (
                       <BubbleView key={j} b={b} rank={shown - 1 - j} />
                     ))}
@@ -87,6 +87,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 muted
                 playsInline
                 poster={s.poster}
+                autoPlay={i === active}
                 preload={i === active ? "auto" : "none"}
                 src={i === active || i === (active + 1) % slides.length ? (narrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001" : undefined}
               />
