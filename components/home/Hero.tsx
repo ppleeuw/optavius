@@ -81,7 +81,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
             <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10">
               {active === i && (
                 <div className="absolute bottom-0 left-0 w-full min-[600px]:right-0 min-[600px]:bottom-0 min-[600px]:left-auto min-[600px]:w-auto">
-                  <div className="flex w-full flex-col justify-end gap-2 overflow-hidden p-4 [mask-image:linear-gradient(to_bottom,transparent_0%,black_32%)] md:gap-3 min-[600px]:w-[454px] md:h-[386px] xl:pb-8" style={narrow ? { height: bubbleH } : undefined}>
+                  <div className="flex w-full flex-col justify-end gap-2 overflow-hidden px-4 pt-4 pb-0 [mask-image:linear-gradient(to_bottom,transparent_0%,black_32%)] md:gap-3 min-[600px]:w-[454px] md:h-[386px]" style={narrow ? { height: bubbleH } : undefined}>
                     {s.bubbles.map((b, j) => (
                       <BubbleView key={j} b={b} rank={shown - 1 - j} open={j < shown} />
                     ))}
