@@ -12,9 +12,9 @@ const BTN = "inline-flex cursor-pointer items-center justify-between rounded-ful
 function BubbleView({ b, rank, open }: { b: Bubble; rank: number; open: boolean }) {
   const state = rank <= 1 ? "mask-position-[center_100%] opacity-100" : rank === 2 ? "mask-position-[center_top] opacity-60" : "mask-position-[center_top] opacity-25";
   return (
-    <div className={"grid place-self-" + b.side} style={{ gridTemplateRows: open ? "1fr" : "0fr", transition: "grid-template-rows 1.1s cubic-bezier(.2,.8,.2,1)" }}>
-    <div className={"min-h-0 " + (open ? "hero-bubble-in" : "opacity-0")} style={{ overflow: "hidden" }}>
-      <div className={GLASS + " flex flex-col gap-2 " + state}>
+    <div className={"grid place-self-" + b.side} style={{ gridTemplateRows: open ? "1fr" : "0fr", transition: "grid-template-rows .7s cubic-bezier(.2,.8,.2,1)" }}>
+    <div className="min-h-0">
+      <div className={GLASS + " flex flex-col gap-2 " + state + (open ? " hero-bubble-in" : " invisible")}>
         <div className="flex items-center gap-2 text-label-md text-white/80">
           {b.kind === "agent" ? (
             <figure className="relative aspect-square size-4 overflow-hidden"><AgentAvatar size={16} /></figure>
@@ -81,7 +81,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
             <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10">
               {active === i && (
                 <div className="absolute bottom-0 left-0 w-full min-[600px]:right-0 min-[600px]:bottom-0 min-[600px]:left-auto min-[600px]:w-auto">
-                  <div className="flex w-full flex-col justify-end gap-2 overflow-hidden px-4 pt-4 pb-6 md:pb-8 [mask-image:linear-gradient(to_bottom,transparent_0%,black_32%)] md:gap-3 min-[600px]:w-[454px] md:h-[386px]" style={narrow ? { height: bubbleH } : undefined}>
+                  <div className="flex w-full flex-col justify-end gap-2 overflow-y-clip px-4 pt-4 pb-4 md:pb-6 [mask-image:linear-gradient(to_bottom,transparent_0%,black_32%)] md:gap-3 min-[600px]:w-[454px] md:h-[386px] xl:pb-8" style={narrow ? { height: bubbleH } : undefined}>
                     {s.bubbles.map((b, j) => (
                       <BubbleView key={j} b={b} rank={shown - 1 - j} open={j < shown} />
                     ))}

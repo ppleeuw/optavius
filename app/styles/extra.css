@@ -3,8 +3,8 @@
 .nav-menu-enter > [role="menu"] { animation: navMenuIn .2s ease-out both; }
 @keyframes mobileMenuIn { from { opacity: 0; } to { opacity: 1; } }
 .mobile-menu-enter { animation: mobileMenuIn .25s ease-out both; }
-@keyframes heroBubbleIn { from { opacity: 0; transform: translateY(calc(100% + 48px)); } to { opacity: 1; transform: none; } }
-.hero-bubble-in { animation: heroBubbleIn 1.1s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes heroBubbleIn { from { transform: translateY(120px) scale(.75); } to { transform: none; } }
+.hero-bubble-in { animation: heroBubbleIn .7s cubic-bezier(.2,.8,.2,1) both; transform-origin: 50% 100%; }
 /* eye-care mockup animations */
 @keyframes bubbleIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
 .bubble-in { animation: bubbleIn .6s cubic-bezier(.2,.8,.2,1) both; }
