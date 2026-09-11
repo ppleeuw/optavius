@@ -1,3 +1,4 @@
+import Img from "./Img";
 import { Fragment } from "react";
 import type { Bubble, CardsSection, CTASection, FeatureSplit, HeroSection, LogoStrip, ProofSection, QuoteBand, RelatedCard, StepsSection, TilesSection, TrustSection, VideoQuote, BigQuote, AccordionItem } from "@/content/types";
 import Carousel from "@/components/Carousel";
@@ -70,7 +71,7 @@ export function CenterHero({ title, lede, cta, image, lang }: { title: string; l
         )}
         {image && (
           <div className="relative mt-12 aspect-square w-full md:aspect-16/7 overflow-hidden rounded-2xl xl:rounded-3xl">
-            <img alt={image.alt} className="block h-auto w-full object-cover media-container" style={imgStyle} src={image.src} />
+            <Img alt={image.alt} className="block h-auto w-full object-cover media-container" style={imgStyle} src={image.src} />
           </div>
         )}
       </div>
@@ -110,7 +111,7 @@ export function QuoteBandSection({ q, lang }: { q: QuoteBand; lang: string }) {
   return (
     <Section theme="theme-product" z={1}>
       <div className="mx-auto max-w-[960px] rounded-3xl bg-white p-6 md:p-10 theme-tech:bg-gray-700">
-        {q.logo && <img alt={q.logoAlt} className="mb-6 block h-8 w-auto max-w-[160px] object-contain object-left" src={q.logo} />}
+        {q.logo && <Img alt={q.logoAlt} className="mb-6 block h-8 w-auto max-w-[160px] object-contain object-left" src={q.logo} />}
         <blockquote className="text-headline-sm text-primary md:text-headline-md">“{q.quote}”</blockquote>
         <div className="mt-6 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
           <figcaption className="flex items-center gap-3">
@@ -195,7 +196,7 @@ export function LogoStripSection({ s, lang, compact = false }: { s: LogoStrip; l
               {s.logos.map((l) => (
                 <li key={l.alt} className="flex w-full justify-stretch">
                   <a aria-label={"Read the customer story about " + l.alt} className="group relative flex w-full items-center justify-center px-4 py-6 focus-outline md:px-0 md:py-8" href={L(lang, l.href)}>
-                    <img alt={l.alt + " Logo"} className={"block group-hover:filter-none group-focus-visible:filter-none group-active:filter-none lg:filter-uniform-30 theme-tech:filter-gray-100 h-8 w-32 object-contain md:h-10 md:w-52 " + (l.className || "")} loading="lazy" src={l.src} style={{ color: "transparent" }} />
+                    <Img alt={l.alt + " Logo"} className={"block group-hover:filter-none group-focus-visible:filter-none group-active:filter-none lg:filter-uniform-30 theme-tech:filter-gray-100 h-8 w-32 object-contain md:h-10 md:w-52 " + (l.className || "")} loading="lazy" src={l.src} style={{ color: "transparent" }} />
                   </a>
                 </li>
               ))}
@@ -232,7 +233,7 @@ export function TrustBlock({ t }: { t: TrustSection }) {
       <div className="flex flex-wrap justify-center gap-2 md:gap-4">
         {t.badges.map((b) => (
           <div key={b.alt} className="relative aspect-square w-16">
-            <img alt={b.alt} className="block h-auto w-full" loading="lazy" src={b.src} style={{ color: "transparent" }} />
+            <Img alt={b.alt} className="block h-auto w-full" loading="lazy" src={b.src} style={{ color: "transparent" }} />
           </div>
         ))}
       </div>
@@ -358,6 +359,32 @@ export function ProofSectionBlock({ p }: { p: ProofSection }) {
   );
 }
 
+/* ---------- FAQ (product and specialty pages) ---------- */
+export function FaqSection({ faq, id }: { faq: { title: string; items: { q: string; a: string }[] }; id: string }) {
+  return (
+    <Section z={1}>
+      <CenterHead title={faq.title} size="md" />
+      <div className="grid grid-cols-12 gap-grid-gutter">
+        <div className="col-span-12 xl:col-span-8 xl:col-start-3">
+          <div className="flex w-full flex-col gap-1" data-accordion-group={id}>
+            {faq.items.map((it, i) => (
+              <button key={it.q} id={`${id}-${i}`} className="w-full rounded-2xl p-6 text-left focus-button transition-[color,background-color,border-radius] bg-surface-tertiary-100 text-primary not-aria-expanded:hover:text-secondary aria-expanded:bg-surface-dark-brand aria-expanded:text-white" type="button" tabIndex={0} aria-expanded="false" aria-controls={`${id}-${i}-panel`}>
+                <div className="flex w-full cursor-pointer items-center justify-between gap-2 text-left text-body-md outline-hidden">
+                  <span className="flex items-center gap-2">{it.q}</span>
+                  <Chevron className="h-6 w-6 shrink-0 transition-[rotate]" />
+                </div>
+                <div role="region" id={`${id}-${i}-panel`} aria-labelledby={`${id}-${i}`} className="overflow-y-clip" style={{ height: "0px" }}>
+                  <div className="max-w-[75ch] pt-6 text-body-sm text-white"><p>{it.a}</p></div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
 /* ---------- Values: three open columns (About) ---------- */
 export function ValuesSection({ items }: { items: AccordionItem[] }) {
   return (
@@ -418,9 +445,9 @@ export function VideoQuotesSection({ title, lede, items, lang }: { title: string
               <blockquote className="relative max-w-prose theme-tech:text-white text-body-md text-balance text-primary xl:min-h-[4lh]">“{q.quote}”</blockquote>
               <a className="group/card relative block overflow-hidden rounded-2xl bg-gray-700 focus-outline" href={L(lang, q.href)} aria-label={q.name + ", " + q.role}>
                 <figure className="relative aspect-[4/5] w-full overflow-hidden">
-                  {q.video ? <video className="absolute inset-0 h-full w-full object-cover" src={q.video + "#t=0.001"} poster={q.poster} muted loop playsInline autoPlay preload="metadata" data-autoplay="true" /> : <img alt={q.name} className="absolute inset-0 h-full w-full object-cover object-top" src={q.poster} loading="lazy" />}
+                  {q.video ? <video className="absolute inset-0 h-full w-full object-cover" src={q.video + "#t=0.001"} poster={q.poster} muted loop playsInline autoPlay preload="metadata" data-autoplay="true" /> : <Img alt={q.name} className="absolute inset-0 h-full w-full object-cover object-top" src={q.poster} loading="lazy" />}
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/70 to-transparent" />
-                  <img alt={q.logoAlt} className={"absolute top-4 left-4 h-7 w-auto max-w-[120px] object-contain " + logoWhite(q.logo).cls} src={logoWhite(q.logo).src} />
+                  <Img alt={q.logoAlt} className={"absolute top-4 left-4 h-7 w-auto max-w-[120px] object-contain " + logoWhite(q.logo).cls} src={logoWhite(q.logo).src} />
                   <figcaption className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-0.5 p-5 text-center text-white">
                     <p className="text-body-sm">{q.name}</p>
                     <p className="text-label-sm text-white/80">{q.role}</p>

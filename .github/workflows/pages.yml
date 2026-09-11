@@ -24,6 +24,7 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: /optavius
           NEXT_PUBLIC_SITE_URL: https://ppleeuw.github.io/optavius
+      - run: node tooling/post-export.js
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

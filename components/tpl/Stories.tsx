@@ -1,3 +1,4 @@
+import Img from "./Img";
 import { Fragment } from "react";
 import type { Story } from "@/content/types";
 import Carousel from "@/components/Carousel";
@@ -34,10 +35,10 @@ export function StoryCards({ stories, lang, title, filters }: { stories: Story[]
           <div key={s.slug} className="col-span-12 md:col-span-6 xl:col-span-4">
             <a className="group block rounded-3xl outline-hidden focus-visible:border-4 focus-visible:border-green-800 focus-visible:p-2" href={L(lang, "/customers/" + s.slug)}>
               <figure className="relative aspect-square overflow-hidden rounded-2xl bg-gray-100 after:opacity-0 after:transition-opacity group-hover:after:opacity-100">
-                <img alt={s.card.alt} loading="lazy" className="block h-auto w-full object-cover motion-safe:transition-all motion-safe:group-hover:scale-102 motion-safe:group-hover:blur-sm motion-safe:group-hover:brightness-80" style={imgStyle} src={s.card.image} />
+                <Img alt={s.card.alt} loading="lazy" className="block h-auto w-full object-cover motion-safe:transition-all motion-safe:group-hover:scale-102 motion-safe:group-hover:blur-sm motion-safe:group-hover:brightness-80" style={imgStyle} src={s.card.image} />
                 <div className="absolute inset-0 bg-black/25" />
                 <div className="absolute z-10 flex h-full w-full flex-col justify-end p-4 md:p-6">
-                  <img alt={s.logoAlt + " Logo"} loading="lazy" className={"block absolute top-1/2 left-1/2 h-14 w-auto max-w-[70%] -translate-x-1/2 -translate-y-1/2 object-contain xl:h-[72px] " + logoWhite(s.logo).cls} style={{ color: "transparent" }} src={logoWhite(s.logo).src} />
+                  <Img alt={s.logoAlt + " Logo"} loading="lazy" className={"block absolute top-1/2 left-1/2 h-14 w-auto max-w-[70%] -translate-x-1/2 -translate-y-1/2 object-contain xl:h-[72px] " + logoWhite(s.logo).cls} style={{ color: "transparent" }} src={logoWhite(s.logo).src} />
                   {s.card.stat && (
                     <div className="flex flex-col gap-1 text-white">
                       <span className="text-headline-md leading-none tabular-nums">{s.card.stat.value}</span>
@@ -70,12 +71,12 @@ export function FeaturedStories({ stories, lang, readMore }: { stories: Story[];
                     <div className="flex w-full flex-col h-full justify-between gap-10">
                       <div className="flex flex-col justify-between gap-6 md:flex-row">
                         <div className="flex flex-col items-start gap-4 md:gap-6 order-2 md:order-1 md:max-w-md xl:max-w-xl">
-                          <img alt={s.logoAlt + " Logo"} loading="lazy" className={"block h-10 w-auto max-w-[200px] object-contain xl:h-14 " + logoWhite(s.logo).cls} style={{ color: "transparent" }} src={logoWhite(s.logo).src} />
+                          <Img alt={s.logoAlt + " Logo"} loading="lazy" className={"block h-10 w-auto max-w-[200px] object-contain xl:h-14 " + logoWhite(s.logo).cls} style={{ color: "transparent" }} src={logoWhite(s.logo).src} />
                           <h2 className="text-balance text-primary text-headline-lg">{s.title}</h2>
                           <a className={BTN + "hover:bg-surface-secondary-100 hover:text-brand-primary h-10 gap-1 px-4 text-label-md flex-row-reverse mt-2 mb-0 bg-gray-100 text-gray-700 md:mt-0"} href={L(lang, "/customers/" + s.slug)}>{readMore}</a>
                         </div>
                         <figure className="relative order-1 h-58 w-58 shrink-0 overflow-hidden rounded-2xl md:order-2 lg:h-90 lg:w-90">
-                          <img alt={s.card.alt} loading="lazy" className="block h-auto w-full object-cover" style={imgStyle} src={s.card.image} />
+                          <Img alt={s.card.alt} loading="lazy" className="block h-auto w-full object-cover" style={imgStyle} src={s.card.image} />
                         </figure>
                       </div>
                       <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-10">
@@ -101,13 +102,13 @@ export function FeaturedStories({ stories, lang, readMore }: { stories: Story[];
 export function StoryHero({ s }: { s: Story }) {
   return (
     <header className="theme-tech relative isolate h-svh w-full bg-surface-tertiary-50 md:h-[90svh] lg:min-h-[800px] 2xl:min-h-[1117px]">
-      <img alt="" aria-hidden="true" loading="lazy" className="block h-auto w-full object-cover -z-20 opacity-100" style={imgStyle} src={s.hero.image} />
+      <Img alt="" aria-hidden="true" loading="lazy" className="block h-auto w-full object-cover -z-20 opacity-100" style={imgStyle} src={s.hero.image} />
       <div className="absolute inset-0 -z-10 bg-linear-to-t from-black/70 via-black/30 to-black/20" />
       <div className={CONTAINER + " relative z-10 flex h-full items-center"}>
         <div className="flex w-full flex-col gap-16 md:gap-30">
           <div className="flex flex-col justify-between gap-6 md:flex-row">
             <div className="flex flex-col items-start gap-4 md:gap-6">
-              <img alt={s.logoAlt + " Logo"} loading="lazy" className={"block h-12 w-auto max-w-[220px] object-contain xl:h-16 " + logoWhite(s.logo).cls} style={{ color: "transparent" }} src={logoWhite(s.logo).src} />
+              <Img alt={s.logoAlt + " Logo"} loading="lazy" className={"block h-12 w-auto max-w-[220px] object-contain xl:h-16 " + logoWhite(s.logo).cls} style={{ color: "transparent" }} src={logoWhite(s.logo).src} />
               <h1 className="text-balance text-primary text-headline-xl">{s.title}</h1>
             </div>
           </div>

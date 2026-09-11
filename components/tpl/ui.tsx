@@ -1,3 +1,4 @@
+import Img from "./Img";
 import { asset } from "@/lib/base";
 import { telDisplay } from "@/content/shared";
 import type { CSSProperties, ReactNode } from "react";
@@ -78,7 +79,7 @@ export function VideoBox({ src, poster, playing = true, light = false, controlsA
   const btn = light ? BTN_GLASS : BTN_TERTIARY;
   return (
     <div className="wistia-bg overflow-hidden bg-surface-tertiary-100 absolute inset-0 media-container" style={{ contain: "layout paint" }}>
-      {poster && <img alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent" }} src={poster} />}
+      {poster && <Img alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent" }} src={poster} />}
       <video className="absolute inset-0 h-full w-full object-cover" src={src + "#t=0.001"} poster={poster} muted loop playsInline autoPlay={playing} preload="metadata" data-autoplay={playing ? "true" : undefined} />
       <div className="group/controls absolute top-0 right-0 bottom-0 left-0 z-10 flex flex-col gap-2 px-2 pb-2 md:px-4 md:pb-4 xl:pb-6 justify-end" style={{ pointerEvents: "auto", opacity: 1 }}>
         <button type="button" className="absolute top-0 right-0 bottom-0 left-0 cursor-pointer" tabIndex={-1} aria-hidden="true"></button>
@@ -99,7 +100,7 @@ export function VideoBox({ src, poster, playing = true, light = false, controlsA
 export function MediaFill({ media, light = false }: { media: Media; light?: boolean }) {
   if (media.kind === "video") return <VideoBox src={media.src} poster={media.poster} light={light} />;
   if (media.kind === "image")
-    return <img alt={media.alt || ""} loading="lazy" className="block h-auto w-full object-cover" style={{ position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, objectPosition: media.position, color: "transparent" }} src={media.src} />;
+    return <Img alt={media.alt || ""} loading="lazy" className="block h-auto w-full object-cover" style={{ position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, objectPosition: media.position, color: "transparent" }} src={media.src} />;
   if (media.zoom && media.zoom !== 1) return <div className="absolute inset-0" style={{ transform: `scale(${media.zoom})`, transformOrigin: "50% 45%" }}><Mock name={media.name} /></div>;
   return <Mock name={media.name} />;
 }

@@ -10,7 +10,11 @@ export const metadata: Metadata = {
   title: "AI voice agents for eye care | Optavius",
   description: "AI voice agents for eye-care providers that answer questions, schedule appointments and handle routine requests, 24/7.",
   icons: { icon: [{ url: `${BASE}/favicon.ico`, sizes: "32x32" }, { url: `${BASE}/icon.svg`, type: "image/svg+xml" }], apple: `${BASE}/apple-icon.png` },
+  manifest: `${BASE}/site.webmanifest`,
+  robots: { index: true, follow: true, "max-image-preview": "large" },
 };
+
+export const viewport = { themeColor: "#006838" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

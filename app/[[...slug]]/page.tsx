@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { LOCALES, splitPath, type Lang } from "@/lib/i18n";
 import { getSite } from "@/lib/content";
 import { BASE as BASE_PATH, SITE_URL } from "@/lib/base";
+import { FAQS } from "@/content/faqs";
+import { existsSync } from "fs";
+import { join } from "path";
 import { AboutPage, AgentsPage, ArticlePage, ARTICLES, AskPage, CareersPage, ConsolePage, CustomersPage, DemoPage, HomePage, IntegrationsPage, PricingRoute, PrivacyPage, ProductPage, ResourcesPage, SpecialtiesIndex, SpecialtyPage, StoryPage, TermsPage } from "@/components/site/Pages";
 
 type Params = { slug?: string[] };
@@ -49,11 +52,15 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   else if (seg[0] === "resources") { const a = (ARTICLES[lang] || ARTICLES.en).find((x) => x.slug === seg[1]); if (a) m = { title: a.title + site.meta.titleSuffix, description: a.description }; }
   const languages: Record<string, string> = {};
   for (const l of LOCALES) languages[l] = `${SITE_URL}${l === "en" ? path || "/" : `/${l}${path === "/" ? "" : path}`}`;
+  languages["x-default"] = languages.en;
+  const canonical = `${SITE_URL}${lang === "en" ? path : `/${lang}${path === "/" ? "" : path}`}`;
+  const key = path === "/" ? "home" : path.replace(/^\//, "");
+  const og = existsSync(join(process.cwd(), "public/og", lang, key + ".png")) ? `${SITE_URL}/og/${lang}/${key}.png` : `${SITE_URL}/og/${lang}.png`;
   const locale = lang === "nl" ? "nl_NL" : lang === "de" ? "de_DE" : "en_US";
   return {
-    title: m.title, description: m.description, alternates: { languages }, icons: { icon: [{ url: `${BASE_PATH}/favicon.ico`, sizes: "32x32" }, { url: `${BASE_PATH}/icon.svg`, type: "image/svg+xml" }], apple: `${BASE_PATH}/apple-icon.png` },
-    openGraph: { title: m.title, description: m.description, siteName: "Optavius", locale, type: "website", images: [{ url: `${SITE_URL}/og/${lang}.png`, width: 1200, height: 630, alt: "Optavius" }] },
-    twitter: { card: "summary_large_image", title: m.title, description: m.description, images: [`${SITE_URL}/og/${lang}.png`] },
+    title: m.title, description: m.description, alternates: { canonical, languages }, icons: { icon: [{ url: `${BASE_PATH}/favicon.ico`, sizes: "32x32" }, { url: `${BASE_PATH}/icon.svg`, type: "image/svg+xml" }], apple: `${BASE_PATH}/apple-icon.png` },
+    openGraph: { title: m.title, description: m.description, siteName: "Optavius", locale, type: "website", images: [{ url: og, width: 1200, height: 630, alt: m.title }] },
+    twitter: { card: "summary_large_image", title: m.title, description: m.description, images: [og] },
   };
 }
 
@@ -62,6 +69,21 @@ const BASE = SITE_URL;
 function jsonLd(path: string, lang: string, site: ReturnType<typeof getSite>) {
   const org = { "@type": "Organization", "@id": `${BASE}/#org`, name: "Optavius", url: BASE, logo: `${BASE}/og/${lang}.png`, contactPoint: [{ "@type": "ContactPoint", telephone: "+1-937-729-2674", contactType: "sales", areaServed: "US", availableLanguage: ["en"] }, { "@type": "ContactPoint", telephone: "+31-97-006-532689", contactType: "sales", areaServed: "NL", availableLanguage: ["nl", "en"] }], sameAs: ["https://www.linkedin.com/company/optavius"] };
   const graph: Record<string, unknown>[] = [org];
+  const seg = path.split("/").filter(Boolean);
+  const prefix = lang === "en" ? "" : "/" + lang;
+  const label = (i: number): string => {
+    const p = "/" + seg.slice(0, i + 1).join("/");
+    const known: Record<string, string> = { "/product": site.product.hero.title, "/product/console": site.consolePage.hero.title, "/product/ask-optavius": site.askOptavius.hero.title, "/product/agents": site.agentsPage.hero.title, "/product/integrations": site.integrations.hero.title, "/pricing": site.pricing.title, "/specialties": site.specialties.title, "/customers": site.customers.title, "/about": site.about.title, "/resources": site.resources.title, "/careers": site.careers.title, "/demo": site.demo.title };
+    if (known[p]) return known[p].replace(/\n/g, " ");
+    if (seg[0] === "specialties" && i === 1) return site.specialties.pages.find((x) => x.slug === seg[1])?.name || seg[1];
+    if (seg[0] === "customers" && i === 1) return site.customers.stories.find((x) => x.slug === seg[1])?.customer || seg[1];
+    if (seg[0] === "resources" && i === 1) return (ARTICLES[lang] || ARTICLES.en).find((x) => x.slug === seg[1])?.title || seg[1];
+    return seg[i];
+  };
+  if (seg.length) graph.push({ "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Optavius", item: `${BASE}${prefix}/` }, ...seg.map((_, i) => ({ "@type": "ListItem", position: i + 2, name: label(i), item: `${BASE}${prefix}/${seg.slice(0, i + 1).join("/")}` }))] });
+  if (seg[0] === "resources" && seg[1]) { const a = (ARTICLES[lang] || ARTICLES.en).find((x) => x.slug === seg[1]); if (a) graph.push({ "@type": "Article", headline: a.title, description: a.description, inLanguage: lang, datePublished: "2026-09-01", dateModified: "2026-09-11", author: { "@id": `${BASE}/#org` }, publisher: { "@id": `${BASE}/#org` }, mainEntityOfPage: `${BASE}${prefix}${path}`, image: `${BASE}/og/${lang}.png` }); }
+  const faq = FAQS[lang]?.[path];
+  if (faq) graph.push({ "@type": "FAQPage", mainEntity: faq.items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) });
   if (path === "/pricing") graph.push({ "@type": "FAQPage", mainEntity: site.pricing.faq.items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) });
   if (path === "/" || path.startsWith("/product") || path === "/pricing") graph.push({ "@type": "Service", "@id": `${BASE}/#service`, name: "Optavius AI voice agents", provider: { "@id": `${BASE}/#org` }, serviceType: "AI voice agent for healthcare practices", areaServed: ["US", "NL", "DE"], description: site.home.meta.description, offers: { "@type": "Offer", price: "299", priceCurrency: "USD", priceSpecification: { "@type": "UnitPriceSpecification", price: "299", priceCurrency: "USD", unitText: "MONTH" } } });
   return JSON.stringify({ "@context": "https://schema.org", "@graph": graph });

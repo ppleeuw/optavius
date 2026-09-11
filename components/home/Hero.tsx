@@ -31,6 +31,8 @@ function BubbleView({ b, rank }: { b: Bubble; rank: number }) {
 export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"]; lang: string; quote?: VideoQuote; tel?: string }) {
   const [active, setActive] = useState(0);
   const [shown, setShown] = useState(0);
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => { const mq = window.matchMedia("(max-width: 767px)"); const upd = () => setNarrow(mq.matches); upd(); mq.addEventListener("change", upd); return () => mq.removeEventListener("change", upd); }, []);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const slides = h.slides;
   const L = (p: string) => (/^(https?:|mailto:|tel:|#)/.test(p) ? p : BASE + (lang === "en" ? p : `/${lang}${p}`));
@@ -46,7 +48,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
 
   return (
     <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[820px]">
-      <div className="mt-30 h-[calc(100%-(var(--spacing)*30))] xl:mt-44 xl:h-[calc(100%-(var(--spacing)*44))]">
+      <div className="mt-30 h-[calc(100%-(var(--spacing)*30))] xl:mt-56 xl:h-[calc(100%-(var(--spacing)*56))]">
         <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10 h-full">
           <h1 className="mb-4 text-headline-xl whitespace-pre-wrap text-white md:mb-6">{h.title}</h1>
           <p className="mb-6 max-w-[46ch] text-body-md text-white/90 md:mb-8 md:text-body-lg">{h.subtitle}</p>
@@ -85,8 +87,8 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 muted
                 playsInline
                 poster={s.poster}
-                preload={i === 0 ? "auto" : "metadata"}
-                src={s.video + "#t=0.001"}
+                preload={i === active ? "auto" : "none"}
+                src={i === active || i === (active + 1) % slides.length ? (narrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001" : undefined}
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-black/10" />
             </div>

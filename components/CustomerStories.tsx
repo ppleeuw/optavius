@@ -1,4 +1,5 @@
 "use client";
+import Img from "@/components/tpl/Img";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type Story = { name: string; title: string; logo: string; logoSrc: string; logoCls: string; w: string; h: string; poster: string; href: string; label: string };
@@ -89,11 +90,11 @@ export default function CustomerStories({ items }: { items: { name: string; titl
               style={{ transform: `scale(${isActive ? active / content : inactive / content})`, transition: anim ? undefined : "none" }}
             >
               <div className="absolute top-4 left-4 z-30 h-[36px] w-[112px]">
-                <img alt={s.logo} className={"block h-full w-full object-contain object-left " + s.logoCls} height={s.h} loading="lazy" src={s.logoSrc} style={{ color: "transparent" }} width={s.w} />
+                <Img alt={s.logo} className={"block h-full w-full object-contain object-left " + s.logoCls} height={s.h} loading="lazy" src={s.logoSrc} style={{ color: "transparent" }} width={s.w} />
               </div>
               <div style={{ opacity: 1 }}>
                 <div className="pointer-events-none z-0 absolute inset-0">
-                  <img alt="" className="absolute inset-0 h-full w-full object-cover object-top" src={s.poster} loading="lazy" />
+                  <Img alt="" className="absolute inset-0 h-full w-full object-cover object-top" src={s.poster} loading="lazy" />
                 </div>
               </div>
               <div aria-hidden="true" className={"absolute inset-x-0 bottom-0 isolate z-30 py-4 transition-opacity duration-750 ease-[cubic-bezier(0.22,1,0.36,1)] " + (isActive ? "opacity-100" : "opacity-0")}>

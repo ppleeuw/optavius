@@ -1,4 +1,5 @@
 "use client";
+import Img from "./Img";
 import { useEffect } from "react";
 import type { Site } from "@/content/types";
 import { BTN_PRIMARY, CONTAINER, SECTION, SM } from "./ui";
@@ -36,7 +37,7 @@ export default function DemoBooking({ d, logos, lang }: { d: Site["demo"]; logos
               <ul className="flex flex-wrap items-center gap-8 pr-10">
                 {logos.map((l) => (
                   <li key={l.alt} className="relative h-9">
-                    <img alt={l.alt + " Logo"} loading="lazy" className="block h-full w-auto max-w-[140px] object-contain filter-gray-400" style={{ color: "transparent" }} src={l.src} />
+                    <Img alt={l.alt + " Logo"} loading="lazy" className="block h-full w-auto max-w-[140px] object-contain filter-gray-400" style={{ color: "transparent" }} src={l.src} />
                   </li>
                 ))}
               </ul>

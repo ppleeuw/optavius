@@ -10,10 +10,12 @@ import Mock from "@/components/mockups/Mock";
 import DemoPlayer from "@/components/tpl/DemoPlayer";
 import DemoBooking from "@/components/tpl/DemoBooking";
 import ResourcesList from "@/components/site/ResourcesList";
+import Img from "@/components/tpl/Img";
+import { FAQS } from "@/content/faqs";
 import PricingPage from "@/components/tpl/Pricing";
 import { LegalPage, Markdown, P } from "@/components/tpl/Prose";
 import { FeaturedStories, StoryCards, StoryHero } from "@/components/tpl/Stories";
-import { AccordionSection, ValuesSection, BigQuoteSection, CTABlock, CardsTabsSection, CenterHero, FeatureSplitSection, LogoStripSection, PageHero, ProofSectionBlock, QuoteBandSection, RelatedSection, StepsBlock, TilesSection, TrustBlock, VideoQuotesSection } from "@/components/tpl/Sections";
+import { AccordionSection, FaqSection, ValuesSection, BigQuoteSection, CTABlock, CardsTabsSection, CenterHero, FeatureSplitSection, LogoStripSection, PageHero, ProofSectionBlock, QuoteBandSection, RelatedSection, StepsBlock, TilesSection, TrustBlock, VideoQuotesSection } from "@/components/tpl/Sections";
 import { BTN_PRIMARY, BTN_SECONDARY, CenterHead, CONTAINER, LeftHead, SM, Section, imgStyle, logoWhite } from "@/components/tpl/ui";
 import { ArrowUp, Icon } from "@/components/tpl/Icons";
 import articlesJson from "@/content/articles.json";
@@ -44,7 +46,8 @@ export function HomePage({ site, lang, path }: Ctx) {
 }
 
 /* ---------- Product pages ---------- */
-function productBody(p: ProductPageT, lang: Lang, extra?: React.ReactNode) {
+function productBody(p: ProductPageT, lang: Lang, extra?: React.ReactNode, path?: string) {
+  const faq = path ? FAQS[lang]?.[path] : undefined;
   return (
     <>
       <PageHero hero={p.hero} lang={lang} />
@@ -71,19 +74,20 @@ function productBody(p: ProductPageT, lang: Lang, extra?: React.ReactNode) {
         </Section>
       )}
       {p.related && <RelatedSection title={p.related.title} cards={p.related.cards} lang={lang} />}
+      {faq && <FaqSection faq={faq} id="faq" />}
       <CTABlock c={p.cta} lang={lang} />
     </>
   );
 }
 
 export function ProductPage({ site, lang, path }: Ctx) {
-  return <Shell site={site} lang={lang} path={path}>{productBody(site.product, lang)}</Shell>;
+  return <Shell site={site} lang={lang} path={path}>{productBody(site.product, lang, undefined, path)}</Shell>;
 }
 export function ConsolePage({ site, lang, path }: Ctx) {
-  return <Shell site={site} lang={lang} path={path}>{productBody(site.consolePage, lang)}</Shell>;
+  return <Shell site={site} lang={lang} path={path}>{productBody(site.consolePage, lang, undefined, path)}</Shell>;
 }
 export function AskPage({ site, lang, path }: Ctx) {
-  return <Shell site={site} lang={lang} path={path}>{productBody(site.askOptavius, lang)}</Shell>;
+  return <Shell site={site} lang={lang} path={path}>{productBody(site.askOptavius, lang, undefined, path)}</Shell>;
 }
 export function AgentsPage({ site, lang, path }: Ctx) {
   const lib = site.agentsPage.library;
@@ -100,7 +104,7 @@ export function AgentsPage({ site, lang, path }: Ctx) {
       </div>
     </Section>
   );
-  return <Shell site={site} lang={lang} path={path}>{productBody(site.agentsPage, lang, library)}</Shell>;
+  return <Shell site={site} lang={lang} path={path}>{productBody(site.agentsPage, lang, library, path)}</Shell>;
 }
 export function IntegrationsPage({ site, lang, path }: Ctx) {
   const lg = site.integrations.logos;
@@ -114,7 +118,7 @@ export function IntegrationsPage({ site, lang, path }: Ctx) {
             <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
               {g.items.map((it) => (
                 <li key={it.name} className="flex h-16 items-center gap-3 rounded-xl bg-white px-4">
-                  <img alt="" src={it.src} className="h-7 w-7 rounded object-contain" loading="lazy" />
+                  <Img alt="" src={it.src} className="h-7 w-7 rounded object-contain" loading="lazy" />
                   <span className="text-body-sm text-primary">{it.name}</span>
                 </li>
               ))}
@@ -125,7 +129,7 @@ export function IntegrationsPage({ site, lang, path }: Ctx) {
       </div>
     </Section>
   );
-  return <Shell site={site} lang={lang} path={path}>{productBody(site.integrations, lang, logos)}</Shell>;
+  return <Shell site={site} lang={lang} path={path}>{productBody(site.integrations, lang, logos, path)}</Shell>;
 }
 export function PricingRoute({ site, lang, path }: Ctx) {
   return <Shell site={site} lang={lang} path={path}><PricingPage p={site.pricing} lang={lang} /></Shell>;
@@ -171,6 +175,7 @@ export function SpecialtyPage({ site, lang, path, page }: Ctx & { page: Specialt
       <BigQuoteSection q={page.quote} />
       <TilesSection s={page.agents} lang={lang} z={3} />
       <TrustBlock t={page.trust} />
+      {FAQS[lang]?.["/specialties/" + page.slug] && <FaqSection faq={FAQS[lang]["/specialties/" + page.slug]} id="faq" />}
       <CTABlock c={page.cta} lang={lang} />
     </Shell>
   );
@@ -190,7 +195,7 @@ export function CustomersPage({ site, lang, path }: Ctx) {
         <div className="relative col-span-12 aspect-square w-full md:aspect-16/7">
           <div className="absolute bottom-2 left-2 z-10 flex flex-col gap-y-2 md:bottom-4 md:left-4 xl:bottom-6 xl:left-6">
           </div>
-          <div className="absolute inset-0 overflow-hidden rounded-2xl xl:rounded-3xl"><img alt={c.heroImage.alt} className="block h-full w-full object-cover" style={imgStyle} src={c.heroImage.src} /><div className="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/50 to-transparent" /></div>
+          <div className="absolute inset-0 overflow-hidden rounded-2xl xl:rounded-3xl"><Img alt={c.heroImage.alt} className="block h-full w-full object-cover" style={imgStyle} src={c.heroImage.src} /><div className="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/50 to-transparent" /></div>
         </div>
       </div>
       <Section z={3}>
@@ -235,7 +240,7 @@ export function StoryPage({ site, lang, path, story }: Ctx & { story: Story }) {
                 );
                 return (
                   <figure key={i} className="relative col-span-12">
-                    <div className="flex justify-center"><div className="w-full"><div className="relative overflow-hidden rounded-2xl aspect-square md:aspect-video">{b.media.kind === "mock" ? <Mock name={b.media.name} /> : b.media.kind === "image" ? <img alt={b.media.alt || ""} className="block h-auto w-full object-cover" style={imgStyle} src={b.media.src} /> : null}</div></div></div>
+                    <div className="flex justify-center"><div className="w-full"><div className="relative overflow-hidden rounded-2xl aspect-square md:aspect-video">{b.media.kind === "mock" ? <Mock name={b.media.name} /> : b.media.kind === "image" ? <Img alt={b.media.alt || ""} className="block h-auto w-full object-cover" style={imgStyle} src={b.media.src} /> : null}</div></div></div>
                   </figure>
                 );
               })}
@@ -268,7 +273,7 @@ export function AboutPage({ site, lang, path }: Ctx) {
         <div className="grid grid-cols-12 gap-grid-gutter gap-y-6">
           {a.founders.people.map((p) => (
             <div key={p.name} className="col-span-12 flex flex-col gap-6 rounded-3xl bg-gray-700 p-6 md:col-span-6 md:flex-row md:p-8">
-              <figure className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-gray-400"><img alt={p.name} className="block h-full w-full object-cover" style={p.image.includes("paul") ? { transform: "scale(1.18)", objectPosition: "58% 62%" } : undefined} src={p.image} /></figure>
+              <figure className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-gray-400"><Img alt={p.name} className="block h-full w-full object-cover" style={p.image.includes("paul") ? { transform: "scale(1.18)", objectPosition: "58% 62%" } : undefined} src={p.image} /></figure>
               <div className="flex flex-col gap-2">
                 <h3 className="text-headline-sm text-white">{p.name}</h3>
                 <p className="text-label-md text-gray-200">{p.role}</p>
@@ -283,7 +288,7 @@ export function AboutPage({ site, lang, path }: Ctx) {
         <div className="grid grid-cols-12 gap-grid-gutter gap-y-6">
           {site.home.quotes.items.map((q) => (
             <a key={q.name} className="group relative col-span-12 flex flex-col justify-between gap-y-6 overflow-hidden rounded-2xl border border-gray-200 bg-gray-100 p-4 focus-outline md:col-span-4 xl:min-h-[400px] xl:p-6" href={lhref(lang, q.href)}>
-              <div className="relative place-self-start rounded-xl bg-white px-6 py-2.5"><img alt={q.logoAlt} className="block h-8 w-auto max-w-[140px] object-contain" src={q.logo} /></div>
+              <div className="relative place-self-start rounded-xl bg-white px-6 py-2.5"><Img alt={q.logoAlt} className="block h-8 w-auto max-w-[140px] object-contain" src={q.logo} /></div>
               <div className="flex flex-col gap-y-4">
                 <p className="text-body-sm text-primary">“{q.quote}”</p>
                 <div className="flex flex-col"><p className="text-label-md text-primary">{q.name}</p><p className="text-label-sm text-secondary">{q.role}</p></div>

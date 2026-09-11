@@ -5,7 +5,7 @@ import { ARTICLES } from "@/components/site/Pages";
 
 import { SITE_URL } from "@/lib/base";
 export const BASE = SITE_URL;
-const STATIC = ["", "product", "product/console", "product/ask-optavius", "product/agents", "product/integrations", "pricing", "specialties", "customers", "about", "resources", "careers", "demo", "privacy", "terms"];
+const STATIC = ["", "product", "product/console", "product/ask-optavius", "product/agents", "product/integrations", "pricing", "specialties", "customers", "about", "resources", "careers"];
 
 export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -24,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       const path = p ? `/${p}` : "";
       const languages: Record<string, string> = {};
       for (const l of LOCALES) languages[l] = `${BASE}${l === "en" ? "" : `/${l}`}${path || "/"}`;
-      out.push({ url: `${BASE}${prefix}${path || "/"}`, lastModified: now, changeFrequency: p.startsWith("resources/") ? "monthly" : "weekly", priority: p === "" ? 1 : p.startsWith("resources/") ? 0.5 : 0.8, alternates: { languages } });
+      out.push({ url: `${BASE}${prefix}${path || "/"}`, lastModified: now, changeFrequency: p.startsWith("resources/") ? "monthly" : "weekly", priority: p === "" ? 1 : p.startsWith("resources/") ? 0.5 : p === "careers" ? 0.4 : 0.8, alternates: { languages } });
     }
   }
   return out;
