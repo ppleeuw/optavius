@@ -33,7 +33,7 @@ export const VIDEOS = {
   fold1: { video: asset("/media/hero1.mp4"), poster: "" },
   fold2: { video: asset("/media/hero2.mp4"), poster: "" },
   fold3: { video: asset("/media/hero3.mp4"), poster: "" },
-  insights: { video: asset("/media/wistia/ob2qtlyzx3.mp4"), poster: asset("/media/wistia/ob2qtlyzx3.jpg") },
+  insights: { video: asset("/optavius/gen/ask-optavius-video.mp4"), poster: asset("/optavius/gen/ask-optavius-poster.webp") },
   product: { video: `${G}/product-frontdesk-video.mp4`, poster: `${G}/product-frontdesk.webp` },
   ophthalmology: { video: `${G}/spec2-ophthalmology-video.mp4`, poster: `${G}/spec2-ophthalmology.webp` },
   optometry: { video: `${G}/spec2-optometry-video.mp4`, poster: `${G}/spec2-optometry.webp` },

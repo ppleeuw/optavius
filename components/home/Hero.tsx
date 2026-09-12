@@ -8,7 +8,7 @@ const GLASS = "rounded-[22px] p-4 border-glass-2xl bg-glass mask-t-from-50% mask
 const BUBBLE_TIMES = [500, 2200, 3900, 5600, 7300];
 const SLIDE_MS = 9800;
 /* desktop only: zoom a clip from its left edge so the face clears the headline */
-const ZOOM: Record<string, string> = { hero3: " md:origin-left md:scale-[1.1]" };
+const ZOOM: Record<string, string> = {};
 const BTN = "inline-flex cursor-pointer items-center justify-between rounded-full outline-hidden disabled:cursor-not-allowed motion-safe:transition-[background-color,color,border-radius] focus-button ";
 
 function BubbleView({ b, rank, open }: { b: Bubble; rank: number; open: boolean }) {
