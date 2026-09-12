@@ -37,6 +37,16 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   const [shown, setShown] = useState(0);
   const [narrow, setNarrow] = useState(false);
   const [bubbleH, setBubbleH] = useState(300);
+  /* ?vdebug=1 shows a live panel with each clip's state, for diagnosing playback on phones */
+  const [dbg, setDbg] = useState<string[] | null>(null);
+  const dbgLog = useRef<string[]>([]);
+  useEffect(() => {
+    if (!/[?&]vdebug/.test(location.search)) return;
+    const t0 = performance.now(); const st = (ms: number) => (ms / 1000).toFixed(1) + "s";
+    const offs = videoRefs.current.map((v, i) => { if (!v) return () => {}; const evs = ["play", "playing", "pause", "waiting", "stalled", "suspend", "ended", "error", "emptied", "abort", "loadeddata"]; const hs = evs.map((e) => { const h = () => { dbgLog.current.push(`${st(performance.now() - t0)} v${i + 1} ${e}${e === "error" && v.error ? " code " + v.error.code : ""}`); if (dbgLog.current.length > 14) dbgLog.current.shift(); }; v.addEventListener(e, h); return () => v.removeEventListener(e, h); }); return () => hs.forEach((f) => f()); });
+    const iv = setInterval(() => { const rows = videoRefs.current.map((v, i) => v ? `v${i + 1} ${(v.currentSrc || "").split("/").pop()?.replace(/#.*/, "") || "-"} t=${v.currentTime.toFixed(1)} ${v.paused ? "paused" : "playing"} rs=${v.readyState} ns=${v.networkState} buf=${v.buffered.length ? v.buffered.end(v.buffered.length - 1).toFixed(1) : "-"}${v.error ? " ERR" + v.error.code : ""}` : `v${i + 1} none`); setDbg([`slide ${active + 1} narrow=${narrow} ${st(performance.now() - t0)} ${innerWidth}x${innerHeight} ${document.visibilityState}`, navigator.userAgent.slice(0, 90), ...rows, "--- events ---", ...dbgLog.current]); }, 500);
+    return () => { clearInterval(iv); offs.forEach((f) => f()); };
+  }, [active, narrow]);
   const noteRef = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
     const measure = () => { const n = noteRef.current; const hd = n?.closest("header"); if (!n || !hd) return; setBubbleH(Math.max(180, Math.round(hd.getBoundingClientRect().bottom - n.getBoundingClientRect().bottom - 6))); };
@@ -69,6 +79,8 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
 
   return (
     <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[820px]">
+      {dbg && <pre className="fixed top-14 left-2 z-[100] max-w-[96vw] overflow-hidden rounded bg-black/80 p-2 text-[10px] leading-tight text-lime-300 whitespace-pre-wrap">{dbg.join("
+")}</pre>}
       <div className="mt-20 h-[calc(100%-(var(--spacing)*20))] md:mt-30 md:h-[calc(100%-(var(--spacing)*30))] xl:mt-56 xl:h-[calc(100%-(var(--spacing)*56))]">
         <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10 h-full">
           <h1 className="mb-4 text-headline-xl whitespace-pre-wrap text-white md:mb-6">{h.title}</h1>
