@@ -81,7 +81,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
 
   return (
     <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[820px]">
-      {dbg && <pre className="fixed top-14 left-2 z-[100] max-w-[96vw] overflow-hidden rounded bg-black/80 p-2 text-[10px] leading-tight text-lime-300 whitespace-pre-wrap">{dbg.join("\n")}</pre>}
+      {dbg && <pre style={{ position: "fixed", top: 100, left: 8, right: 8, zIndex: 2147483000, background: "rgba(0,0,0,.92)", color: "#b6f36b", font: "10px/1.35 ui-monospace, Menlo, monospace", padding: 8, borderRadius: 6, whiteSpace: "pre-wrap", margin: 0, pointerEvents: "none" }}>{dbg.join("\n")}</pre>}
       <div className="mt-20 h-[calc(100%-(var(--spacing)*20))] md:mt-30 md:h-[calc(100%-(var(--spacing)*30))] xl:mt-56 xl:h-[calc(100%-(var(--spacing)*56))]">
         <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10 h-full">
           <h1 className="mb-4 text-headline-xl whitespace-pre-wrap text-white md:mb-6">{h.title}</h1>
