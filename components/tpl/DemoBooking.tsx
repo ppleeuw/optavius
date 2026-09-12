@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import type { Site } from "@/content/types";
 import { BTN_PRIMARY, CONTAINER, SECTION, SM } from "./ui";
 import { Icon } from "./Icons";
-import { calLink, loadCal } from "@/components/CalBooking";
+import { calLink, loadCal , CAL_CONFIG } from "@/components/CalBooking";
 
 /** Demo page: one job, pick a slot. Inline Cal.com calendar when a link is configured, otherwise a single button to the booking page. */
 export default function DemoBooking({ d, logos, lang }: { d: Site["demo"]; logos: { src: string; alt: string }[]; lang: string }) {
@@ -12,7 +12,7 @@ export default function DemoBooking({ d, logos, lang }: { d: Site["demo"]; logos
   useEffect(() => {
     if (!link) return;
     loadCal();
-    window.Cal("inline", { elementOrSelector: "#cal-inline", calLink: link, config: { layout: "month_view" } });
+    window.Cal("inline", { elementOrSelector: "#cal-inline", calLink: link, config: CAL_CONFIG });
   }, [link]);
   return (
     <section className={SECTION + " pb-12 md:py-16 xl:py-18"} style={{ zIndex: 1 }}>

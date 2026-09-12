@@ -7,6 +7,9 @@ import { BASE } from "@/lib/base";
 declare global { interface Window { Cal?: any } }
 
 const BRAND = "#006838";
+/** Booker colours (Cal.com CSS variables): green brand, white surfaces, dark text. */
+const CAL_VARS = { "cal-brand": BRAND, "cal-brand-emphasis": "#00522c", "cal-brand-text": "#ffffff", "cal-bg": "#ffffff", "cal-bg-emphasis": "#f3f4f1", "cal-bg-subtle": "#f7f8f5", "cal-bg-muted": "#f3f4f1", "cal-bg-inverted": "#0f1a14", "cal-text": "#0f1a14", "cal-text-emphasis": "#0f1a14", "cal-text-subtle": "#4b5550", "cal-text-muted": "#6b746f", "cal-text-inverted": "#ffffff", "cal-border": "#d9ddd8", "cal-border-emphasis": "#b9c0bb", "cal-border-subtle": "#e6e9e4", "cal-border-booker": "#e6e9e4", "cal-border-muted": "#eef0ec", "cal-font-family": "gtAmerica, Helvetica, Arial, sans-serif" };
+export const CAL_CONFIG = { layout: "month_view", theme: "light" };
 
 /** Loads the Cal.com embed once (official loader snippet) and applies the site's colours. */
 export function loadCal() {
@@ -27,7 +30,7 @@ export function loadCal() {
       };
     })(window, "https://app.cal.com/embed/embed.js", "init");
     window.Cal("init", { origin: "https://app.cal.com" });
-    window.Cal("ui", { theme: "light", styles: { branding: { brandColor: BRAND } }, hideEventTypeDetails: false, layout: "month_view" });
+    window.Cal("ui", { theme: "light", cssVarsPerTheme: { light: CAL_VARS, dark: CAL_VARS }, styles: { branding: { brandColor: BRAND } }, hideEventTypeDetails: false, layout: "month_view" });
   }
 }
 
@@ -46,7 +49,7 @@ export default function CalBooking({ lang }: { lang: string }) {
       const p = BASE && u.pathname.startsWith(BASE) ? u.pathname.slice(BASE.length) : u.pathname;
       if (u.origin !== location.origin || !/^\/(nl\/|de\/)?demo\/?$/.test(p)) return;
       e.preventDefault();
-      window.Cal("modal", { calLink: link, config: { layout: "month_view" } });
+      window.Cal("modal", { calLink: link, config: CAL_CONFIG });
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
