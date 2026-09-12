@@ -51,11 +51,20 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   useEffect(() => {
     loaded.current.add(active); loaded.current.add((active + 1) % slides.length);
     const v = videoRefs.current[active];
-    if (v) { try { if (v.readyState === 0) v.load(); v.currentTime = 0; const p = v.play(); if (p) p.catch(() => {}); } catch {} }
+    videoRefs.current.forEach((o, j) => { if (o && j !== active) { try { o.pause(); } catch {} } });
+    let off = () => {};
+    if (v) {
+      const start = () => { try { v.currentTime = 0; } catch {} const p = v.play(); if (p) p.catch(() => {}); };
+      if (v.readyState >= 2) start();
+      else { const on = () => { v.removeEventListener("loadeddata", on); start(); }; v.addEventListener("loadeddata", on); off = () => v.removeEventListener("loadeddata", on); try { v.load(); } catch {} }
+    }
+    /* phones pause media in a background tab; resume the active clip when the page comes back */
+    const vis = () => { if (document.visibilityState === "visible" && v && v.paused) { const p = v.play(); if (p) p.catch(() => {}); } };
+    document.addEventListener("visibilitychange", vis);
     setShown(0);
     const timers = BUBBLE_TIMES.map((t, i) => setTimeout(() => setShown(i + 1), t));
     const next = setTimeout(() => setActive((a) => (a + 1) % slides.length), SLIDE_MS);
-    return () => { timers.forEach(clearTimeout); clearTimeout(next); };
+    return () => { timers.forEach(clearTimeout); clearTimeout(next); off(); document.removeEventListener("visibilitychange", vis); };
   }, [active, slides.length, narrow]);
 
   return (
@@ -97,10 +106,11 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 ref={(el) => { videoRefs.current[i] = el; }}
                 className={"block h-full w-full pointer-events-none absolute object-cover object-[75%_center] md:object-center" + (ZOOM[(s.video.match(/hero[0-9]/) || [""])[0]] || "")}
                 muted
+                loop
                 playsInline
                 poster={s.poster}
                 autoPlay={i === active}
-                preload={i === active ? "auto" : "none"}
+                preload={i === active || i === (active + 1) % slides.length ? "auto" : "none"}
                 src={i === active || i === (active + 1) % slides.length || loaded.current.has(i) ? (narrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001" : undefined}
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-black/10" />
