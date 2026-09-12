@@ -37,6 +37,8 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   const [shown, setShown] = useState(0);
   const [narrow, setNarrow] = useState(false);
   const [bubbleH, setBubbleH] = useState(300);
+  const [cut, setCut] = useState(false);
+  const prevActive = useRef(0);
   /* ?vdebug=1 shows a live panel with each clip's state, for diagnosing playback on phones */
   const [dbg, setDbg] = useState<string[] | null>(null);
   const dbgLog = useRef<string[]>([]);
@@ -62,6 +64,8 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
 
   useEffect(() => {
     loaded.current.add(active); loaded.current.add((active + 1) % slides.length);
+    let cutRaf = 0;
+    if (prevActive.current !== active) { prevActive.current = active; setCut(true); cutRaf = requestAnimationFrame(() => { cutRaf = requestAnimationFrame(() => setCut(false)); }); }
     const v = videoRefs.current[active];
     videoRefs.current.forEach((o, j) => { if (o && j !== active) { try { o.pause(); } catch {} } });
     let off = () => {};
@@ -76,7 +80,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
     setShown(0);
     const timers = BUBBLE_TIMES.map((t, i) => setTimeout(() => setShown(i + 1), t));
     const next = setTimeout(() => setActive((a) => (a + 1) % slides.length), SLIDE_MS);
-    return () => { timers.forEach(clearTimeout); clearTimeout(next); off(); document.removeEventListener("visibilitychange", vis); };
+    return () => { timers.forEach(clearTimeout); clearTimeout(next); off(); cancelAnimationFrame(cutRaf); document.removeEventListener("visibilitychange", vis); };
   }, [active, slides.length, narrow]);
 
   return (
@@ -113,7 +117,8 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 </div>
               )}
             </div>
-            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")}>
+            {/* hard switch: iOS Safari stops repainting a video whose ancestor animates opacity, so the cut is softened by the separate overlay below */}
+            <div className={"absolute inset-0 " + (active === i ? "" : "invisible")}>
               <div className="absolute inset-0 -z-10 bg-green-800" />
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
@@ -130,6 +135,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
             </div>
           </Fragment>
         ))}
+        <div className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: cut ? 0.7 : 0, transition: cut ? "none" : "opacity .5s ease-out" }} />
       </div>
     </header>
   );
