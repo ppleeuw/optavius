@@ -33,7 +33,7 @@ export const SendIcon = ({ className = "h-3.5 w-3.5" }: { className?: string }) 
   </svg>
 );
 
-/** Agent avatar: a small eye glyph inside a soft squircle (replaces the source's Sierra symbol in mockups). */
+/** Agent avatar: a small eye glyph inside a soft squircle (used in the product mockups). */
 export const AgentAvatar = ({ size = 18, className = "" }: { size?: number; className?: string }) => (
   <span className={"inline-flex shrink-0 items-center justify-center rounded-[38%] bg-green-500 text-white " + className} style={{ width: size, height: size }}>
     <Symbol className="h-[62%] w-[62%]" />

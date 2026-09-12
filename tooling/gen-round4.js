@@ -3,7 +3,7 @@
 const fs = require('fs'); const path = require('path');
 const { falRun, download, upload } = require('./fal');
 const sharp = require('sharp');
-const P = 'C:/Users/peter/AppData/Roaming/Claude/scratch-workspaces/11f88b9f-a9bc-4623-98c2-159c4317abcc/ebdd3719-145a-4ed7-b0d4-b1610478bd78/scratch-2026-09-09-35bbf8/sierra-clone/public/optavius';
+const P = 'public/optavius';
 const G = P + '/gen'; const TMP = 'C:/Users/peter/AppData/Local/Temp/sgen'; fs.mkdirSync(TMP, { recursive: true });
 const DONE = G + '/done4.json'; const done = fs.existsSync(DONE) ? JSON.parse(fs.readFileSync(DONE, 'utf8')) : {};
 const mark = (k) => { done[k] = true; fs.writeFileSync(DONE, JSON.stringify(done)); };

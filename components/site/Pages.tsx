@@ -4,7 +4,7 @@ import { href as lhref } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import Hero from "@/components/home/Hero";
 import Bento from "@/components/home/Bento";
-import MeetConsole from "@/components/home/MeetSierra";
+import MeetConsole from "@/components/home/MeetConsole";
 import CustomerStories from "@/components/CustomerStories";
 import Mock from "@/components/mockups/Mock";
 import DemoPlayer from "@/components/tpl/DemoPlayer";

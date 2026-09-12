@@ -6,7 +6,7 @@ import { DashboardShell, DashboardTable, DashboardInput } from "../mockups/Dashb
  * Scroll-linked section: dotted grid parallax (desktop), heading + dashboard layers fade/scale in while in view
  * (and back out when leaving), mirroring the original framer-motion behaviour.
  */
-export default function MeetSierra({ title, lede }: { title: string; lede: string }) {
+export default function MeetConsole({ title, lede }: { title: string; lede: string }) {
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);

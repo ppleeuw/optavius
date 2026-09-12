@@ -78,7 +78,7 @@ const PAUSE = (
 export function VideoBox({ src, poster, playing = true, light = false, controlsAlign = "justify-start" }: { src: string; poster?: string; playing?: boolean; light?: boolean; controlsAlign?: string }) {
   const btn = light ? BTN_GLASS : BTN_TERTIARY;
   return (
-    <div className="wistia-bg overflow-hidden bg-surface-tertiary-100 absolute inset-0 media-container" style={{ contain: "layout paint" }}>
+    <div className="video-bg overflow-hidden bg-surface-tertiary-100 absolute inset-0 media-container" style={{ contain: "layout paint" }}>
       {poster && <Img alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ position: "absolute", height: "100%", width: "100%", left: 0, top: 0, right: 0, bottom: 0, color: "transparent" }} src={poster} />}
       <video className="absolute inset-0 h-full w-full object-cover" src={src + "#t=0.001"} poster={poster} muted loop playsInline autoPlay={playing} preload="metadata" data-autoplay={playing ? "true" : undefined} />
       <div className="group/controls absolute top-0 right-0 bottom-0 left-0 z-10 flex flex-col gap-2 px-2 pb-2 md:px-4 md:pb-4 xl:pb-6 justify-end" style={{ pointerEvents: "auto", opacity: 1 }}>

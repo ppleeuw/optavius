@@ -34,7 +34,6 @@ export const VIDEOS = {
   fold2: { video: asset("/media/hero2.mp4"), poster: "" },
   fold3: { video: asset("/media/hero3.mp4"), poster: "" },
   insights: { video: asset("/media/wistia/ob2qtlyzx3.mp4"), poster: asset("/media/wistia/ob2qtlyzx3.jpg") },
-  context: { video: asset("/media/wistia/qnnxqeyk4f.mp4"), poster: asset("/media/wistia/qnnxqeyk4f.jpg") },
   product: { video: `${G}/product-frontdesk-video.mp4`, poster: `${G}/product-frontdesk.webp` },
   ophthalmology: { video: `${G}/spec2-ophthalmology-video.mp4`, poster: `${G}/spec2-ophthalmology.webp` },
   optometry: { video: `${G}/spec2-optometry-video.mp4`, poster: `${G}/spec2-optometry.webp` },
@@ -65,9 +64,9 @@ export const PHOTOS = {
 export const BADGES = {
   soc1: asset("/optavius/badge-soc1.svg"),
   iso27001: asset("/optavius/badge-iso27001.svg"),
-  hipaa: asset("/media/6d5e654d895c6ff9417b38c6cdc455dc8a4648d5-648x800.svg"),
+  hipaa: asset("/optavius/badge-hipaa.svg"),
   gdpr: asset("/optavius/badge-gdpr.svg"),
-  euai: asset("/media/7dda42bfedc9b7730088dc9c99dd1651ebefc41f-648x800.svg"),
+  euai: asset("/optavius/badge-euai.svg"),
   fhir: asset("/optavius/badge-fhir.svg"),
   baa: asset("/optavius/badge-baa.svg"),
 };

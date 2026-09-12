@@ -58,7 +58,7 @@ export default function Enhancer() {
 
     // play / pause buttons for background videos
     document.querySelectorAll<HTMLButtonElement>('main button[aria-label="Play video"], main button[aria-label="Pause video"]').forEach((btn) => {
-      const scope = btn.closest(".media-container, .wistia-bg, figure, .relative") || btn.parentElement;
+      const scope = btn.closest(".media-container, .video-bg, figure, .relative") || btn.parentElement;
       const video = scope?.querySelector("video") || btn.closest("section")?.querySelector("video");
       if (!video) return;
       on(btn, "click", (e) => {
@@ -98,9 +98,9 @@ export default function Enhancer() {
     });
 
     // custom video player controls (Unmute / Fullscreen / progress slider)
-    document.querySelectorAll<HTMLElement>("main [data-wistia-player]").forEach((wrap) => {
+    document.querySelectorAll<HTMLElement>("main [data-video-player]").forEach((wrap) => {
       const video = wrap.querySelector("video");
-      const scope = wrap.closest(".media-container, .wistia-bg")?.parentElement || wrap.parentElement;
+      const scope = wrap.closest(".media-container, .video-bg")?.parentElement || wrap.parentElement;
       if (!video || !scope) return;
       const mute = scope.querySelector<HTMLButtonElement>('button[aria-label="Unmute audio"], button[aria-label="Mute audio"]');
       const full = scope.querySelector<HTMLButtonElement>('button[aria-label="Make fullscreen"]');

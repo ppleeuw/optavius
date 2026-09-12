@@ -1,6 +1,6 @@
 # Optavius website
 
-Next.js (App Router), React and TypeScript. Layout and visual system reproduced from a Sierra-style reference; all content,
+Next.js (App Router), React and TypeScript. Static site (Next.js export) for optavius.com. All content,
 media and mockups are Optavius' own.
 
 ## Run

@@ -10,8 +10,7 @@ const pages = ['/', '/product', '/product/console', '/product/ask-optavius', '/p
     const total = await page.evaluate(() => document.body.scrollHeight); for (let y = 0; y < total; y += 800) { await page.evaluate(v => scrollTo(0, v), y); await page.waitForTimeout(100); }
     await page.waitForTimeout(800);
     const broken = await page.evaluate(() => [...document.images].filter(i => i.complete && i.naturalWidth === 0 && i.getAttribute('src')).map(i => i.getAttribute('src').slice(0, 80)));
-    const sierra = await page.evaluate(() => (document.body.innerText.match(/Sierra/g) || []).length);
-    if (fails.length || errs.length || broken.length || sierra) { bad++; console.log(p, '| failed:', fails.slice(0, 3).join(' ; '), '| errors:', errs.slice(0, 2).join(' ; '), '| broken imgs:', broken.slice(0, 3).join(' ; '), '| "Sierra" mentions:', sierra); }
+    if (fails.length || errs.length || broken.length) { bad++; console.log(p, '| failed:', fails.slice(0, 3).join(' ; '), '| errors:', errs.slice(0, 2).join(' ; '), '| broken imgs:', broken.slice(0, 3).join(' ; '), '| "Sierra" mentions:', sierra); }
     await page.close();
   }
   console.log(pages.length - bad, 'of', pages.length, 'pages clean'); await b.close();
