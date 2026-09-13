@@ -37,18 +37,6 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   const [shown, setShown] = useState(0);
   const [narrow, setNarrow] = useState(false);
   const [bubbleH, setBubbleH] = useState(300);
-  /* ?vdebug=1 shows a live panel with each clip's state, for diagnosing playback on phones */
-  const [dbg, setDbg] = useState<string[] | null>(null);
-  const dbgLog = useRef<string[]>([]);
-  useEffect(() => {
-    if (!/[?&]vdebug/.test(location.search)) return;
-    const t0 = performance.now(); const st = (ms: number) => (ms / 1000).toFixed(1) + "s";
-    const frames = videoRefs.current.map(() => 0); const lastT = videoRefs.current.map(() => -1); const stallSince = videoRefs.current.map(() => 0);
-    const rvfc = videoRefs.current.map((v, i) => { const vv = v as (HTMLVideoElement & { requestVideoFrameCallback?: (cb: () => void) => number }) | null; if (!vv || !vv.requestVideoFrameCallback) return; let alive = true; const tick = () => { if (!alive) return; frames[i]++; vv.requestVideoFrameCallback!(tick); }; vv.requestVideoFrameCallback(tick); return () => { alive = false; }; });
-    const offs = videoRefs.current.map((v, i) => { if (!v) return () => {}; const evs = ["play", "playing", "pause", "waiting", "stalled", "suspend", "ended", "error", "emptied", "abort", "loadeddata"]; const hs = evs.map((e) => { const h = () => { dbgLog.current.push(`${st(performance.now() - t0)} v${i + 1} ${e}${e === "error" && v.error ? " code " + v.error.code : ""}`); if (dbgLog.current.length > 14) dbgLog.current.shift(); }; v.addEventListener(e, h); return () => v.removeEventListener(e, h); }); return () => hs.forEach((f) => f()); });
-    const iv = setInterval(() => { const rows = videoRefs.current.map((v, i) => { if (!v) return `v${i + 1} none`; if (!v.paused) { if (v.currentTime === lastT[i]) stallSince[i] += 0.5; else stallSince[i] = 0; } lastT[i] = v.currentTime; const f = frames[i]; frames[i] = 0; return `v${i + 1} ${(v.currentSrc || "").split("/").pop()?.replace(/#.*/, "") || "-"} t=${v.currentTime.toFixed(1)} ${v.paused ? "paused" : "playing"} rs=${v.readyState} buf=${v.buffered.length ? v.buffered.end(v.buffered.length - 1).toFixed(1) : "-"} frames/0.5s=${f} stalled=${stallSince[i].toFixed(1)}s${v.error ? " ERR" + v.error.code : ""}`; }); setDbg([`slide ${active + 1} narrow=${narrow} ${st(performance.now() - t0)} ${innerWidth}x${innerHeight} ${document.visibilityState}`, navigator.userAgent.slice(0, 90), ...rows, "--- events ---", ...dbgLog.current]); }, 500);
-    return () => { clearInterval(iv); offs.forEach((f) => f()); rvfc.forEach((f) => f && f()); };
-  }, [active, narrow]);
   const noteRef = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
     const measure = () => { const n = noteRef.current; const hd = n?.closest("header"); if (!n || !hd) return; setBubbleH(Math.max(180, Math.round(hd.getBoundingClientRect().bottom - n.getBoundingClientRect().bottom - 6))); };
@@ -56,24 +44,22 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   }, []);
   useEffect(() => { const mq = window.matchMedia("(max-width: 767px)"); const upd = () => setNarrow(mq.matches); upd(); mq.addEventListener("change", upd); return () => mq.removeEventListener("change", upd); }, []);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const loaded = useRef<Set<number>>(new Set([0]));
   const slides = h.slides;
   const L = (p: string) => (/^(https?:|mailto:|tel:|#)/.test(p) ? p : BASE + (lang === "en" ? p : `/${lang}${p}`));
 
   useEffect(() => {
+    loaded.current.add(active); loaded.current.add((active + 1) % slides.length);
     const v = videoRefs.current[active];
-    if (v) { try { v.currentTime = 0; } catch {} const p = v.play(); if (p) p.catch(() => {}); }
-    /* phones pause media in a background tab; resume the active clip when the page comes back */
-    const vis = () => { if (document.visibilityState === "visible" && v && v.paused) { const p = v.play(); if (p) p.catch(() => {}); } };
-    document.addEventListener("visibilitychange", vis);
+    if (v) { try { if (v.readyState === 0) v.load(); v.currentTime = 0; const p = v.play(); if (p) p.catch(() => {}); } catch {} }
     setShown(0);
     const timers = BUBBLE_TIMES.map((t, i) => setTimeout(() => setShown(i + 1), t));
     const next = setTimeout(() => setActive((a) => (a + 1) % slides.length), SLIDE_MS);
-    return () => { timers.forEach(clearTimeout); clearTimeout(next); document.removeEventListener("visibilitychange", vis); };
-  }, [active, slides.length]);
+    return () => { timers.forEach(clearTimeout); clearTimeout(next); };
+  }, [active, slides.length, narrow]);
 
   return (
     <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[820px]">
-      {dbg && <pre style={{ position: "fixed", top: 100, left: 8, right: 8, zIndex: 2147483000, background: "rgba(0,0,0,.92)", color: "#b6f36b", font: "10px/1.35 ui-monospace, Menlo, monospace", padding: 8, borderRadius: 6, whiteSpace: "pre-wrap", margin: 0, pointerEvents: "none" }}>{dbg.join("\n")}</pre>}
       <div className="mt-20 h-[calc(100%-(var(--spacing)*20))] md:mt-30 md:h-[calc(100%-(var(--spacing)*30))] xl:mt-56 xl:h-[calc(100%-(var(--spacing)*56))]">
         <div className="mx-auto w-full max-w-[1160px] px-container-margin relative z-10 h-full">
           <h1 className="mb-4 text-headline-xl whitespace-pre-wrap text-white md:mb-6">{h.title}</h1>
@@ -105,20 +91,23 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 </div>
               )}
             </div>
-            {/* first frame behind the clip: an inline blurred thumbnail paints instantly, the real frame replaces it; no poster attribute (iOS keeps a real video layer) */}
-            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")} style={{ backgroundColor: "#3b2f24", backgroundImage: [s.poster && `url(${s.poster})`, s.lqip && `url(${s.lqip})`].filter(Boolean).join(", ") || undefined, backgroundSize: "cover", backgroundPosition: narrow ? "75% center" : "center" }}>
+            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")}>
+              <div className="absolute inset-0 -z-10 bg-green-800" />
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
                 className={"block h-full w-full pointer-events-none absolute object-cover object-[75%_center] md:object-center" + (ZOOM[(s.video.match(/hero[0-9]/) || [""])[0]] || "")}
                 muted
                 playsInline
-                preload="metadata"
-                src={s.video + "#t=0.001"}
+                poster={s.poster}
+                autoPlay={i === active}
+                preload={i === active ? "auto" : "none"}
+                src={i === active || i === (active + 1) % slides.length || loaded.current.has(i) ? (narrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001" : undefined}
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-black/10" />
             </div>
           </Fragment>
-        ))}      </div>
+        ))}
+      </div>
     </header>
   );
 }
