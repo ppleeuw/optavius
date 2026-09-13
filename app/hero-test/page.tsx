@@ -22,7 +22,7 @@ export default function HeroTest() {
       setStatus(`${variant} t=${el.currentTime.toFixed(1)} ${el.paused ? "paused" : "playing"} rs=${el.readyState} buf=${el.buffered.length ? el.buffered.end(el.buffered.length - 1).toFixed(1) : "-"} frames/0.5s=${f} stalled=${stalled.toFixed(1)}s${el.error ? " ERR" + el.error.code : ""}`); }, 500);
     return () => { alive = false; clearInterval(iv); timers.forEach(clearTimeout); };
   }, [variant]);
-  const src = BASE + (variant === "file720" ? "/media/test-720.mp4" : "/media/hero1.mp4") + "#t=0.001";
+  const src = BASE + (variant === "file720" ? "/media/test-720.mp4" : variant === "good" ? "/media/test-good.mp4" : variant === "nofrag" ? "/media/hero1.mp4" : "/media/hero1.mp4#t=0.001");
   return (
     <div className="theme-base relative h-svh w-full bg-black text-white">
       <video ref={v} key={variant} className="absolute inset-0 h-full w-full object-cover object-[75%_center]" muted playsInline preload="metadata" src={src} />
@@ -33,7 +33,7 @@ export default function HeroTest() {
           ))}
         </div>
       )}
-      <pre style={{ position: "fixed", top: 8, left: 8, right: 8, zIndex: 9999, background: "rgba(0,0,0,.9)", color: "#b6f36b", font: "11px/1.4 ui-monospace, Menlo, monospace", padding: 8, whiteSpace: "pre-wrap", margin: 0 }}>{status}{"\n"}variants: plain | bubbles | nomask | file720 | js</pre>
+      <pre style={{ position: "fixed", top: 8, left: 8, right: 8, zIndex: 9999, background: "rgba(0,0,0,.9)", color: "#b6f36b", font: "11px/1.4 ui-monospace, Menlo, monospace", padding: 8, whiteSpace: "pre-wrap", margin: 0 }}>{status}{"\n"}variants: plain | good | nofrag | file720 | bubbles | nomask | js</pre>
     </div>
   );
 }
