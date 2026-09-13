@@ -37,8 +37,8 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   const [shown, setShown] = useState(0);
   const [narrow, setNarrow] = useState(false);
   const [bubbleH, setBubbleH] = useState(300);
-  const [cut, setCut] = useState(false);
-  const prevActive = useRef(0);
+  /* clip sources are chosen once on the client and never changed afterwards (iOS Safari dislikes live src/preload changes) */
+  const [srcNarrow, setSrcNarrow] = useState<boolean | null>(null);
   /* ?vdebug=1 shows a live panel with each clip's state, for diagnosing playback on phones */
   const [dbg, setDbg] = useState<string[] | null>(null);
   const dbgLog = useRef<string[]>([]);
@@ -56,32 +56,23 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
     const measure = () => { const n = noteRef.current; const hd = n?.closest("header"); if (!n || !hd) return; setBubbleH(Math.max(180, Math.round(hd.getBoundingClientRect().bottom - n.getBoundingClientRect().bottom - 6))); };
     measure(); window.addEventListener("resize", measure); return () => window.removeEventListener("resize", measure);
   }, []);
-  useEffect(() => { const mq = window.matchMedia("(max-width: 767px)"); const upd = () => setNarrow(mq.matches); upd(); mq.addEventListener("change", upd); return () => mq.removeEventListener("change", upd); }, []);
+  useEffect(() => { const mq = window.matchMedia("(max-width: 767px)"); const upd = () => setNarrow(mq.matches); upd(); setSrcNarrow((c) => (c === null ? mq.matches : c)); mq.addEventListener("change", upd); return () => mq.removeEventListener("change", upd); }, []);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const loaded = useRef<Set<number>>(new Set([0]));
   const slides = h.slides;
   const L = (p: string) => (/^(https?:|mailto:|tel:|#)/.test(p) ? p : BASE + (lang === "en" ? p : `/${lang}${p}`));
 
   useEffect(() => {
-    loaded.current.add(active); loaded.current.add((active + 1) % slides.length);
-    let cutRaf = 0;
-    if (prevActive.current !== active) { prevActive.current = active; setCut(true); cutRaf = requestAnimationFrame(() => { cutRaf = requestAnimationFrame(() => setCut(false)); }); }
+    if (srcNarrow === null) return;
     const v = videoRefs.current[active];
-    videoRefs.current.forEach((o, j) => { if (o && j !== active) { try { o.pause(); } catch {} } });
-    let off = () => {};
-    if (v) {
-      const start = () => { try { v.currentTime = 0; } catch {} const p = v.play(); if (p) p.catch(() => {}); };
-      if (v.readyState >= 2) start();
-      else { const on = () => { v.removeEventListener("loadeddata", on); start(); }; v.addEventListener("loadeddata", on); off = () => v.removeEventListener("loadeddata", on); try { v.load(); } catch {} }
-    }
+    if (v) { try { v.currentTime = 0; } catch {} const p = v.play(); if (p) p.catch(() => {}); }
     /* phones pause media in a background tab; resume the active clip when the page comes back */
     const vis = () => { if (document.visibilityState === "visible" && v && v.paused) { const p = v.play(); if (p) p.catch(() => {}); } };
     document.addEventListener("visibilitychange", vis);
     setShown(0);
     const timers = BUBBLE_TIMES.map((t, i) => setTimeout(() => setShown(i + 1), t));
     const next = setTimeout(() => setActive((a) => (a + 1) % slides.length), SLIDE_MS);
-    return () => { timers.forEach(clearTimeout); clearTimeout(next); off(); cancelAnimationFrame(cutRaf); document.removeEventListener("visibilitychange", vis); };
-  }, [active, slides.length, narrow]);
+    return () => { timers.forEach(clearTimeout); clearTimeout(next); document.removeEventListener("visibilitychange", vis); };
+  }, [active, slides.length, srcNarrow]);
 
   return (
     <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[820px]">
@@ -117,26 +108,21 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 </div>
               )}
             </div>
-            {/* hard switch: iOS Safari stops repainting a video whose ancestor animates opacity, so the cut is softened by the separate overlay below */}
-            <div className={"absolute inset-0 " + (active === i ? "" : "invisible")}>
+            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")}>
               <div className="absolute inset-0 -z-10 bg-green-800" />
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
                 className={"block h-full w-full pointer-events-none absolute object-cover object-[75%_center] md:object-center" + (ZOOM[(s.video.match(/hero[0-9]/) || [""])[0]] || "")}
                 muted
-                loop
                 playsInline
                 poster={s.poster}
-                autoPlay={i === active}
-                preload={i === active || i === (active + 1) % slides.length ? "auto" : "none"}
-                src={i === active || i === (active + 1) % slides.length || loaded.current.has(i) ? (narrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001" : undefined}
+                preload="metadata"
+                src={srcNarrow === null ? undefined : (srcNarrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001"}
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-black/10" />
             </div>
           </Fragment>
-        ))}
-        <div className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: cut ? 0.7 : 0, transition: cut ? "none" : "opacity .5s ease-out" }} />
-      </div>
+        ))}      </div>
     </header>
   );
 }
