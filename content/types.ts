@@ -83,7 +83,7 @@ export type Site = {
   };
   home: {
     meta: { title: string; description: string };
-    hero: { title: string; subtitle: string; primary: Link; secondary: Link; note: string; slides: { video: string; poster: string; bubbles: Bubble[] }[] };
+    hero: { title: string; subtitle: string; primary: Link; secondary: Link; note: string; slides: { video: string; poster: string; lqip?: string; bubbles: Bubble[] }[] };
     logos: LogoStrip;
     demo: DemoSection;
     bento: { title: string; lede: string; cards: { id: string; title: string; body: string; sr: string }[] };

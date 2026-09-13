@@ -37,8 +37,6 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   const [shown, setShown] = useState(0);
   const [narrow, setNarrow] = useState(false);
   const [bubbleH, setBubbleH] = useState(300);
-  /* clip sources are chosen once on the client and never changed afterwards (iOS Safari dislikes live src/preload changes) */
-  const [srcNarrow, setSrcNarrow] = useState<boolean | null>(null);
   /* ?vdebug=1 shows a live panel with each clip's state, for diagnosing playback on phones */
   const [dbg, setDbg] = useState<string[] | null>(null);
   const dbgLog = useRef<string[]>([]);
@@ -56,13 +54,12 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
     const measure = () => { const n = noteRef.current; const hd = n?.closest("header"); if (!n || !hd) return; setBubbleH(Math.max(180, Math.round(hd.getBoundingClientRect().bottom - n.getBoundingClientRect().bottom - 6))); };
     measure(); window.addEventListener("resize", measure); return () => window.removeEventListener("resize", measure);
   }, []);
-  useEffect(() => { const mq = window.matchMedia("(max-width: 767px)"); const upd = () => setNarrow(mq.matches); upd(); setSrcNarrow((c) => (c === null ? mq.matches : c)); mq.addEventListener("change", upd); return () => mq.removeEventListener("change", upd); }, []);
+  useEffect(() => { const mq = window.matchMedia("(max-width: 767px)"); const upd = () => setNarrow(mq.matches); upd(); mq.addEventListener("change", upd); return () => mq.removeEventListener("change", upd); }, []);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const slides = h.slides;
   const L = (p: string) => (/^(https?:|mailto:|tel:|#)/.test(p) ? p : BASE + (lang === "en" ? p : `/${lang}${p}`));
 
   useEffect(() => {
-    if (srcNarrow === null) return;
     const v = videoRefs.current[active];
     if (v) { try { v.currentTime = 0; } catch {} const p = v.play(); if (p) p.catch(() => {}); }
     /* phones pause media in a background tab; resume the active clip when the page comes back */
@@ -72,7 +69,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
     const timers = BUBBLE_TIMES.map((t, i) => setTimeout(() => setShown(i + 1), t));
     const next = setTimeout(() => setActive((a) => (a + 1) % slides.length), SLIDE_MS);
     return () => { timers.forEach(clearTimeout); clearTimeout(next); document.removeEventListener("visibilitychange", vis); };
-  }, [active, slides.length, srcNarrow]);
+  }, [active, slides.length]);
 
   return (
     <header className="relative isolate h-svh w-full md:h-[90svh] md:min-h-[820px]">
@@ -108,16 +105,15 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 </div>
               )}
             </div>
-            {/* first frame as a background (not a poster attribute): no flash before the clip paints, and iOS keeps a real video layer */}
-            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")} style={s.poster ? { backgroundImage: `url(${s.poster})`, backgroundSize: "cover", backgroundPosition: narrow ? "75% center" : "center" } : undefined}>
-              <div className="absolute inset-0 -z-10 bg-green-800" />
+            {/* first frame behind the clip: an inline blurred thumbnail paints instantly, the real frame replaces it; no poster attribute (iOS keeps a real video layer) */}
+            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")} style={{ backgroundColor: "#3b2f24", backgroundImage: [s.poster && `url(${s.poster})`, s.lqip && `url(${s.lqip})`].filter(Boolean).join(", ") || undefined, backgroundSize: "cover", backgroundPosition: narrow ? "75% center" : "center" }}>
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
                 className={"block h-full w-full pointer-events-none absolute object-cover object-[75%_center] md:object-center" + (ZOOM[(s.video.match(/hero[0-9]/) || [""])[0]] || "")}
                 muted
                 playsInline
                 preload="metadata"
-                src={srcNarrow === null ? undefined : (srcNarrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001"}
+                src={s.video + "#t=0.001"}
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-black/10" />
             </div>
