@@ -108,14 +108,14 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 </div>
               )}
             </div>
-            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")}>
+            {/* first frame as a background (not a poster attribute): no flash before the clip paints, and iOS keeps a real video layer */}
+            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")} style={s.poster ? { backgroundImage: `url(${s.poster})`, backgroundSize: "cover", backgroundPosition: narrow ? "75% center" : "center" } : undefined}>
               <div className="absolute inset-0 -z-10 bg-green-800" />
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
                 className={"block h-full w-full pointer-events-none absolute object-cover object-[75%_center] md:object-center" + (ZOOM[(s.video.match(/hero[0-9]/) || [""])[0]] || "")}
                 muted
                 playsInline
-                poster={s.poster}
                 preload="metadata"
                 src={srcNarrow === null ? undefined : (srcNarrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001"}
               />
