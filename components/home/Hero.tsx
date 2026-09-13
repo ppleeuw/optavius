@@ -1,5 +1,6 @@
 "use client";
 import { Fragment, useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import type { Bubble, Site, VideoQuote } from "@/content/types";
 import { AgentAvatar } from "../mockups/ui";
 import { BASE } from "@/lib/base";
@@ -46,6 +47,7 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const loaded = useRef<Set<number>>(new Set([0]));
   const slides = h.slides;
+  if (slides[0]?.poster) preload(slides[0].poster, { as: "image", fetchPriority: "high" });
   const L = (p: string) => (/^(https?:|mailto:|tel:|#)/.test(p) ? p : BASE + (lang === "en" ? p : `/${lang}${p}`));
 
   useEffect(() => {
@@ -91,16 +93,16 @@ export default function Hero({ h, lang, quote, tel }: { h: Site["home"]["hero"];
                 </div>
               )}
             </div>
-            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")}>
-              <div className="absolute inset-0 -z-10 bg-green-800" />
+            {/* the clip's own first frame sits behind it (inline thumbnail first, then the real frame), so loading and crossfades never show a flat colour */}
+            <div className={"transition-opacity duration-500 absolute inset-0 " + (active === i ? "opacity-100" : "opacity-0 delay-200")} style={{ backgroundColor: "#2f2a25", backgroundImage: [s.poster && `url(${s.poster})`, s.lqip && `url(${s.lqip})`].filter(Boolean).join(", ") || undefined, backgroundSize: "cover", backgroundPosition: narrow ? "75% center" : "center" }}>
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
                 className={"block h-full w-full pointer-events-none absolute object-cover object-[75%_center] md:object-center" + (ZOOM[(s.video.match(/hero[0-9]/) || [""])[0]] || "")}
                 muted
                 playsInline
-                poster={s.poster}
+                poster={s.poster || undefined}
                 autoPlay={i === active}
-                preload={i === active ? "auto" : "none"}
+                preload={i === active || i === (active + 1) % slides.length ? "auto" : "none"}
                 src={i === active || i === (active + 1) % slides.length || loaded.current.has(i) ? (narrow ? s.video.replace(/\.mp4$/, "-720.mp4") : s.video) + "#t=0.001" : undefined}
               />
               <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-black/10" />
