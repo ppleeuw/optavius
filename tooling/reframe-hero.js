@@ -1,7 +1,9 @@
 // Reframe the original hero clips to 16:9 with the person in the right third (Luma Ray 3.2 reframe, outpaints the left).
 // Run from the project root with FAL_KEY set: node tooling/reframe-hero.js
+/* working folder for downloads and intermediates; override with MEDIA_TMP */
+const TMP = process.env.MEDIA_TMP || require('os').tmpdir() + '/optavius-media';
 const { falRun, download, upload } = require('./fal');
-const H = 'C:/Users/peter/AppData/Local/Temp/sgen/hero';
+const H = TMP + '/hero';
 const SRC_AR = 1212 / 756, OUT_AR = 16 / 9;
 const JOBS = [
   ['hero1', 'a137b179d3b526ee8affb8f4930568ab199f2fb8', 0.56, 'The same warm bedroom continues to the left: wooden panelled wall, a soft bedside lamp, the bed with white sheets, warm evening light, nothing else, static camera'],

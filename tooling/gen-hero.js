@@ -1,7 +1,7 @@
 // Hero clips: photoreal stills (FLUX 1.1 ultra, raw) with the person in the right third, then Veo 3.1 image-to-video.
 // Run from the project root with FAL_KEY set: node tooling/gen-hero.js images|videos  [key ...]
 const fs = require('fs'); const { falRun, download, upload } = require('./fal'); const sharp = require('sharp');
-const TMP = 'C:/Users/peter/AppData/Local/Temp/sgen/hero'; fs.mkdirSync(TMP, { recursive: true });
+const TMP = (process.env.MEDIA_TMP || require('os').tmpdir() + '/optavius-media') + '/hero'; fs.mkdirSync(TMP, { recursive: true });
 const SUF = process.env.SUF || '';
 const STYLE = 'Candid documentary photograph, 35mm lens, soft natural light, real skin texture, muted realistic colours, slight film grain, not staged, no text, no logos, no watermark.';
 const FRAME = 'Composition: the person is placed in the right third of the frame, face in the upper right quarter, looking slightly off camera. The left two thirds of the frame are a calm, uncluttered, softly lit background with nothing important in them. Horizontal 16:9.';

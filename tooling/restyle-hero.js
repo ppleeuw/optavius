@@ -1,8 +1,10 @@
 // Restyle the hero/product clips: same person, new clothing colour/fabric and a different room (FLUX Kontext max on a frame),
 // then Veo 3.1 image-to-video with the usual motion prompt. Run from the project root with FAL_KEY set:
 //   node tooling/restyle-hero.js edits [key ...]   |   node tooling/restyle-hero.js videos [key ...]
+/* working folder for downloads and intermediates; override with MEDIA_TMP */
+const TMP = process.env.MEDIA_TMP || require('os').tmpdir() + '/optavius-media';
 const fs = require('fs'); const { falRun, download, upload, editImage } = require('./fal');
-const H = 'C:/Users/peter/AppData/Local/Temp/sgen/hero/edit'; const SUF = process.env.SUF || '';
+const H = TMP + '/hero/edit'; const SUF = process.env.SUF || '';
 const KEEP = ' Keep the person exactly the same: same face, hair, skin, pose, hands, expression, position in the frame and camera angle. Photorealistic, natural light, no text.';
 const EDITS = {
   hero1: 'Change her pale yellow blouse into a deep bordeaux red blouse of the same cut. Put a small white wireless earbud in her visible ear. Replace the wooden panelled bedroom with a bright living room: plain off-white wall, a light grey linen sofa she is sitting on, a tall green plant and a paper floor lamp on the left.' + KEEP,

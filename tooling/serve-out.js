@@ -1,6 +1,6 @@
 // Serve a static export under a base path the way GitHub Pages does (extensionless -> .html, dirs -> index.html).
 const http = require('http'), fs = require('fs'), path = require('path');
-const root = process.argv[2], base = process.argv[3] || '', port = Number(process.argv[4] || 3300);
+const root = process.argv[2] || 'out', base = process.argv[3] !== undefined ? process.argv[3] : (process.env.NEXT_PUBLIC_BASE_PATH || ''), port = Number(process.argv[4] || 3300);
 const types = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.mp4': 'video/mp4', '.mp3': 'audio/mpeg', '.woff2': 'font/woff2', '.ico': 'image/x-icon', '.json': 'application/json', '.xml': 'application/xml', '.txt': 'text/plain' };
 http.createServer((req, res) => {
   let u = decodeURIComponent(req.url.split('?')[0]);

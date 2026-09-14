@@ -4,7 +4,7 @@ const fs = require('fs'); const path = require('path');
 const { falRun, download, upload } = require('./fal');
 const sharp = require('sharp');
 const P = 'public/optavius';
-const G = P + '/gen'; const TMP = 'C:/Users/peter/AppData/Local/Temp/sgen'; fs.mkdirSync(TMP, { recursive: true });
+const G = P + '/gen'; const TMP = (process.env.MEDIA_TMP || require('os').tmpdir() + '/optavius-media'); fs.mkdirSync(TMP, { recursive: true });
 const DONE = G + '/done4.json'; const done = fs.existsSync(DONE) ? JSON.parse(fs.readFileSync(DONE, 'utf8')) : {};
 const mark = (k) => { done[k] = true; fs.writeFileSync(DONE, JSON.stringify(done)); };
 

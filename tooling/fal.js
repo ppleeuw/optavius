@@ -2,7 +2,7 @@
 const fs = require('fs'); const path = require('path');
 const KEY = process.env.FAL_KEY;
 const sharp = require('sharp');
-const TMP = 'C:/Users/peter/AppData/Local/Temp/sgen'; fs.mkdirSync(TMP, { recursive: true });
+const TMP = (process.env.MEDIA_TMP || require('os').tmpdir() + '/optavius-media'); fs.mkdirSync(TMP, { recursive: true });
 let seq = 0; const tmpName = (ext) => path.join(TMP, 't' + Date.now() + '_' + (seq++) + ext);
 
 async function falRun(model, input, { timeoutMs = 600000 } = {}) {

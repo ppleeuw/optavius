@@ -1,6 +1,8 @@
 // Retakes with custom motion prompts. Run from the project root with FAL_KEY set: node tooling/retake-hero.js
+/* working folder for downloads and intermediates; override with MEDIA_TMP */
+const TMP = process.env.MEDIA_TMP || require('os').tmpdir() + '/optavius-media';
 const { falRun, download, upload } = require('./fal');
-const H = 'C:/Users/peter/AppData/Local/Temp/sgen/hero/edit';
+const H = TMP + '/hero/edit';
 const BASE = 'Locked-off static camera on a tripod with only a very slow, gentle handheld drift: the framing stays as in the first frame, no pan, no zoom. The person stays in the same spot. ';
 const JOBS = [
   ['hero2-editlive.jpg', 'hero2-rawcalm.mp4', BASE + 'The man is on a phone call and keeps the phone pressed to his ear for the entire clip; he never lowers it, never puts it down, never takes his hand away from his ear. His expression is calm, attentive and neutral: no laughing, no big smile, at most a faint polite smile. Continuous subtle motion: he listens, speaks briefly with visible lip movement, gives small nods, shifts slightly; the free hand rests on the table and moves a little. No still frames.'],

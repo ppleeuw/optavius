@@ -1,8 +1,10 @@
 // Recolour the shirts in the two hero videos with Luma Modify (keeps motion and scene). Run from the project root with FAL_KEY set.
+/* working folder for downloads and intermediates; override with MEDIA_TMP */
+const TMP = process.env.MEDIA_TMP || require('os').tmpdir() + '/optavius-media';
 const fs = require('fs'); const { falRun, upload, download } = require('./fal');
 const JOBS = [
-  ['C:/Users/peter/AppData/Local/Temp/sgen/hero1-trim.mp4', 'public/media/hero1-green.mp4', 'Change only the colour of the woman\'s cream button-up shirt to a deep forest green shirt of the same fabric and cut. Keep her face, hair, skin, the room, the lighting, the camera and every movement exactly the same.'],
-  ['C:/Users/peter/AppData/Local/Temp/sgen/hero3-trim.mp4', 'public/media/hero3-green.mp4', 'Change only the woman\'s red and white striped polo shirt into a plain soft sage green polo shirt with the same collar and fit. Keep her face, hair, the phone, the window, the lighting, the camera and every movement exactly the same.'],
+  [TMP + '/hero1-trim.mp4', 'public/media/hero1-green.mp4', 'Change only the colour of the woman\'s cream button-up shirt to a deep forest green shirt of the same fabric and cut. Keep her face, hair, skin, the room, the lighting, the camera and every movement exactly the same.'],
+  [TMP + '/hero3-trim.mp4', 'public/media/hero3-green.mp4', 'Change only the woman\'s red and white striped polo shirt into a plain soft sage green polo shirt with the same collar and fit. Keep her face, hair, the phone, the window, the lighting, the camera and every movement exactly the same.'],
 ];
 (async () => {
   for (const [src, dst, prompt] of JOBS) {

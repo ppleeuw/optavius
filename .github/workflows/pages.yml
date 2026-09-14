@@ -1,3 +1,8 @@
+# Builds the static site and publishes it to GitHub Pages on every push to main.
+# Set repository variables (Settings > Secrets and variables > Actions > Variables) to move to the real domain:
+#   NEXT_PUBLIC_BASE_PATH = ""                         (empty on a custom domain; "/optavius" on ppleeuw.github.io/optavius)
+#   NEXT_PUBLIC_SITE_URL  = "https://www.optavius.com"
+#   CUSTOM_DOMAIN         = "www.optavius.com"         (writes the CNAME file GitHub Pages needs)
 name: Deploy to GitHub Pages
 on:
   push:
@@ -20,11 +25,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx next build
+      - run: npm run build:static
         env:
-          NEXT_PUBLIC_BASE_PATH: /optavius
-          NEXT_PUBLIC_SITE_URL: https://ppleeuw.github.io/optavius
-      - run: node tooling/post-export.js
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.NEXT_PUBLIC_BASE_PATH != '' && vars.NEXT_PUBLIC_BASE_PATH || (vars.CUSTOM_DOMAIN != '' && '' || '/optavius') }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL != '' && vars.NEXT_PUBLIC_SITE_URL || (vars.CUSTOM_DOMAIN != '' && format('https://{0}', vars.CUSTOM_DOMAIN) || 'https://ppleeuw.github.io/optavius') }}
+      - if: ${{ vars.CUSTOM_DOMAIN != '' }}
+        run: echo "${{ vars.CUSTOM_DOMAIN }}" > out/CNAME
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

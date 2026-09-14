@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "build:static": "next build && node tooling/post-export.js",
+    "css:mockups": "node scripts-build-mockups-css.mjs",
+    "preview": "node tooling/serve-out.js out",
+    "check": "node tooling/opsweep.js"
   },
   "dependencies": {
     "@rive-app/webgl2": "^2.35.0",
@@ -21,7 +25,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "playwright": "^1.63.0",
     "postcss": "^8.5.28",
+    "sharp": "^0.35.4",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

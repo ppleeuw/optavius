@@ -1,5 +1,7 @@
+/* working folder for downloads and intermediates; override with MEDIA_TMP */
+const TMP = process.env.MEDIA_TMP || require('os').tmpdir() + '/optavius-media';
 const { chromium } = require('playwright'); const fs = require('fs');
-const OUT = 'C:/Users/peter/AppData/Local/Temp/sgen/op'; fs.mkdirSync(OUT, { recursive: true });
+const OUT = TMP + '/op'; fs.mkdirSync(OUT, { recursive: true });
 const pages = process.argv.slice(3); const w = Number(process.argv[2] || 1440);
 (async () => {
   const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: w, height: w < 800 ? 844 : 900 }, isMobile: w < 800, hasTouch: w < 800 });
